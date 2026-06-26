@@ -1,0 +1,40 @@
+name: Refresh Case-Jira Data
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch data from Salesforce and Jira
+        env:
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_DOMAIN: tractionrec.atlassian.net
+          SF_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL }}
+          SF_ACCESS_TOKEN: ${{ secrets.SF_ACCESS_TOKEN }}
+        run: python scripts/fetch_data.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/cases.json
+          git diff --cached --quiet || git commit -m "chore: refresh case-jira data [skip ci]"
+          git push

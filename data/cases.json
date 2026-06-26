@@ -1,0 +1,78 @@
+{
+  "last_updated": "2026-06-26T19:54:49.011440+00:00",
+  "link_strategy": {
+    "primary": "Set salesforce.jira_field in config/filters.json after discovery",
+    "fallback": "Parse Jira keys from Case Subject/Description",
+    "overrides": "config/overrides.json for manual links"
+  },
+  "stats": {
+    "total_cases": 3,
+    "linked": 2,
+    "unlinked": 1,
+    "status_mismatch": 1,
+    "open_unlinked": 1,
+    "linked_pct": 67
+  },
+  "cases": [
+    {
+      "caseId": "500xx0000000001AAA",
+      "caseNumber": "00012345",
+      "client": "Example YMCA",
+      "subject": "Billing autopay issue TOD029-29532",
+      "type": "Problem",
+      "caseStatus": "In Progress",
+      "isClosed": false,
+      "createdDate": "2026-05-01",
+      "closedDate": null,
+      "jiraKey": "TOD029-29532",
+      "linkSource": "parsed",
+      "jiraStatus": "Done",
+      "jiraSummary": "Fix billing autopay batch error",
+      "jiraAssignee": "Jane Doe",
+      "jiraUpdated": "2026-05-28",
+      "jiraPriority": "High",
+      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29532",
+      "alignment": "mismatch"
+    },
+    {
+      "caseId": "500xx0000000002AAA",
+      "caseNumber": "00012346",
+      "client": "Sample JCC",
+      "subject": "Registration export question",
+      "type": "Question",
+      "caseStatus": "Closed",
+      "isClosed": true,
+      "createdDate": "2026-04-15",
+      "closedDate": "2026-04-20",
+      "jiraKey": "TOD029-29356",
+      "linkSource": "parsed",
+      "jiraStatus": "Released",
+      "jiraSummary": "Registration export enhancement",
+      "jiraAssignee": "John Smith",
+      "jiraUpdated": "2026-05-27",
+      "jiraPriority": "Medium",
+      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29356",
+      "alignment": "aligned_closed"
+    },
+    {
+      "caseId": "500xx0000000003AAA",
+      "caseNumber": "00012347",
+      "client": "Demo Aquatics Center",
+      "subject": "How to configure swim lesson waitlists",
+      "type": "Question",
+      "caseStatus": "New",
+      "isClosed": false,
+      "createdDate": "2026-06-10",
+      "closedDate": null,
+      "jiraKey": null,
+      "linkSource": "unlinked",
+      "jiraStatus": null,
+      "jiraSummary": null,
+      "jiraAssignee": null,
+      "jiraUpdated": null,
+      "jiraPriority": null,
+      "jiraUrl": null,
+      "alignment": "unlinked"
+    }
+  ]
+}

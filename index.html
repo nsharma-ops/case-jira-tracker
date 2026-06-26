@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TractionRec Case–Jira Status Tracker</title>
+  <style>
+    :root {
+      --tr-blue: #1a3a6b;
+      --tr-blue-light: #2a5298;
+      --tr-teal: #00b4a0;
+      --bg: #f4f6fa;
+      --card: #ffffff;
+      --border: #e1e6ef;
+      --text: #1a2333;
+      --muted: #6b7a94;
+      --danger-bg: #fee2e2;
+      --danger-text: #991b1b;
+      --warn-bg: #fef3c7;
+      --warn-text: #92400e;
+      --success-bg: #d1fae5;
+      --success-text: #065f46;
+      --neutral-bg: #f3f4f6;
+      --neutral-text: #4b5563;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+    header {
+      background: var(--tr-blue);
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      flex-wrap: wrap; gap: 12px;
+    }
+    header h1 { color: #fff; font-size: 20px; font-weight: 700; }
+    header h1 span { color: var(--tr-teal); }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .last-updated { font-size: 12px; color: rgba(255,255,255,0.65); }
+    .btn-refresh {
+      background: var(--tr-teal); color: #fff; border: none; border-radius: 6px;
+      padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .btn-refresh:hover { background: #009688; }
+    .btn-refresh.loading { opacity: 0.6; cursor: not-allowed; }
+
+    main { max-width: 1400px; margin: 0 auto; padding: 20px 24px 40px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-value { font-size: 28px; font-weight: 700; margin-top: 6px; }
+    .stat-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .stat-card.danger .stat-value { color: var(--danger-text); }
+    .stat-card.warn .stat-value { color: var(--warn-text); }
+
+    .filters {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: end;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 5px; min-width: 140px; flex: 1; }
+    .filter-group label { font-size: 12px; font-weight: 600; color: var(--muted); }
+    .filter-group input, .filter-group select {
+      padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
+      font-size: 13px; background: var(--bg); color: var(--text);
+    }
+    .filter-group.wide { min-width: 220px; flex: 2; }
+
+    .table-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .table-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px; color: var(--muted);
+    }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      text-align: left; padding: 10px 12px;
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.4px;
+      border-bottom: 2px solid var(--border); white-space: nowrap;
+      background: #fafbfc;
+    }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    tr.row-mismatch td { background: var(--danger-bg); }
+    tr.row-unlinked td { background: var(--neutral-bg); }
+    tr.row-jira-not-found td { background: var(--warn-bg); }
+
+    .subject-cell { max-width: 280px; }
+    .subject-main { font-weight: 500; line-height: 1.35; }
+    .subject-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    a.link { color: var(--tr-blue-light); text-decoration: none; font-weight: 600; }
+    a.link:hover { text-decoration: underline; }
+
+    .badge {
+      display: inline-block; padding: 3px 8px; border-radius: 12px;
+      font-size: 11px; font-weight: 700; white-space: nowrap;
+    }
+    .badge-aligned_open, .badge-aligned_closed { background: var(--success-bg); color: var(--success-text); }
+    .badge-mismatch { background: var(--danger-bg); color: var(--danger-text); }
+    .badge-unlinked, .badge-jira_not_found { background: var(--neutral-bg); color: var(--neutral-text); }
+
+    .status-open { color: #0369a1; font-weight: 600; }
+    .status-closed { color: var(--muted); }
+
+    footer {
+      text-align: center; padding: 20px;
+      font-size: 12px; color: var(--muted);
+    }
+
+    .empty-state { padding: 40px; text-align: center; color: var(--muted); }
+    .error-banner {
+      background: var(--danger-bg); color: var(--danger-text);
+      border: 1px solid #fecaca; border-radius: 8px;
+      padding: 12px 16px; margin-bottom: 16px; font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TractionRec <span>Case–Jira Tracker</span></h1>
+    <div class="header-right">
+      <span class="last-updated" id="lastUpdated">Loading…</span>
+      <button class="btn-refresh" id="refreshBtn" onclick="loadData(true)">↻ Refresh</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="errorBanner" class="error-banner" style="display:none"></div>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="stat-label">Total Cases</div><div class="stat-value" id="statTotal">—</div><div class="stat-sub">Last 365 days</div></div>
+      <div class="stat-card"><div class="stat-label">Linked to Jira</div><div class="stat-value" id="statLinked">—</div><div class="stat-sub" id="statLinkedPct">—</div></div>
+      <div class="stat-card danger"><div class="stat-label">Status Mismatches</div><div class="stat-value" id="statMismatch">—</div><div class="stat-sub">Case vs Jira out of sync</div></div>
+      <div class="stat-card warn"><div class="stat-label">Open, No Jira</div><div class="stat-value" id="statOpenUnlinked">—</div><div class="stat-sub">Open cases without a link</div></div>
+    </div>
+
+    <div class="filters">
+      <div class="filter-group wide">
+        <label>Search client or subject</label>
+        <input type="text" id="searchInput" placeholder="Filter…" oninput="applyFilters()" />
+      </div>
+      <div class="filter-group">
+        <label>SF Status</label>
+        <select id="sfStatusFilter" onchange="applyFilters()">
+          <option value="">All</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Alignment</label>
+        <select id="alignmentFilter" onchange="applyFilters()">
+          <option value="">All</option>
+          <option value="aligned">Aligned</option>
+          <option value="mismatch">Mismatch</option>
+          <option value="unlinked">Unlinked</option>
+          <option value="jira_not_found">Jira not found</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Jira Status</label>
+        <select id="jiraStatusFilter" onchange="applyFilters()">
+          <option value="">All</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header">
+        <span id="rowCount">0 cases</span>
+        <span>Click Case # or Jira Key to open in Salesforce / Jira</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Case #</th>
+              <th>Client</th>
+              <th>Subject</th>
+              <th>SF Status</th>
+              <th>Jira Key</th>
+              <th>Jira Status</th>
+              <th>Alignment</th>
+              <th>Jira Updated</th>
+            </tr>
+          </thead>
+          <tbody id="caseTableBody">
+            <tr><td colspan="8" class="empty-state">Loading cases…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    TractionRec Case–Jira Status Tracker · Data from Salesforce + Jira · Auto-refreshes hourly via GitHub Actions
+  </footer>
+
+  <script>
+    const SF_LIGHTNING_BASE = 'https://tractionrec.lightning.force.com';
+    let allCases = [];
+    let filteredCases = [];
+
+    const ALIGNMENT_LABELS = {
+      aligned_open: 'Aligned (open)',
+      aligned_closed: 'Aligned (closed)',
+      mismatch: 'Mismatch',
+      unlinked: 'Unlinked',
+      jira_not_found: 'Jira not found',
+    };
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      try {
+        return new Date(iso).toLocaleString(undefined, {
+          month: 'short', day: 'numeric', year: 'numeric',
+          hour: '2-digit', minute: '2-digit',
+        });
+      } catch {
+        return iso;
+      }
+    }
+
+    function sfCaseUrl(caseId) {
+      return `${SF_LIGHTNING_BASE}/lightning/r/Case/${caseId}/view`;
+    }
+
+    function populateJiraStatusFilter(cases) {
+      const select = document.getElementById('jiraStatusFilter');
+      const current = select.value;
+      const statuses = [...new Set(cases.map(c => c.jiraStatus).filter(Boolean))].sort();
+      select.innerHTML = '<option value="">All</option>' +
+        statuses.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+      if (statuses.includes(current)) select.value = current;
+    }
+
+    function escapeHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function renderStats(stats) {
+      document.getElementById('statTotal').textContent = stats?.total_cases ?? 0;
+      document.getElementById('statLinked').textContent = stats?.linked ?? 0;
+      document.getElementById('statLinkedPct').textContent =
+        stats?.linked_pct != null ? `${stats.linked_pct}% of cases` : '—';
+      document.getElementById('statMismatch').textContent = stats?.status_mismatch ?? 0;
+      document.getElementById('statOpenUnlinked').textContent = stats?.open_unlinked ?? 0;
+    }
+
+    function rowClass(alignment) {
+      if (alignment === 'mismatch') return 'row-mismatch';
+      if (alignment === 'unlinked') return 'row-unlinked';
+      if (alignment === 'jira_not_found') return 'row-jira-not-found';
+      return '';
+    }
+
+    function renderTable(cases) {
+      const tbody = document.getElementById('caseTableBody');
+      document.getElementById('rowCount').textContent =
+        `${cases.length} case${cases.length === 1 ? '' : 's'} shown`;
+
+      if (!cases.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No cases match the current filters.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = cases.map(c => `
+        <tr class="${rowClass(c.alignment)}">
+          <td>
+            ${c.caseId
+              ? `<a class="link" href="${sfCaseUrl(c.caseId)}" target="_blank" rel="noopener">${escapeHtml(c.caseNumber)}</a>`
+              : escapeHtml(c.caseNumber)}
+          </td>
+          <td>${escapeHtml(c.client)}</td>
+          <td class="subject-cell">
+            <div class="subject-main">${escapeHtml(c.subject)}</div>
+            ${c.type ? `<div class="subject-sub">${escapeHtml(c.type)} · created ${escapeHtml(c.createdDate || '—')}</div>` : ''}
+          </td>
+          <td>
+            <span class="${c.isClosed ? 'status-closed' : 'status-open'}">${escapeHtml(c.caseStatus)}</span>
+          </td>
+          <td>
+            ${c.jiraKey && c.jiraUrl
+              ? `<a class="link" href="${escapeHtml(c.jiraUrl)}" target="_blank" rel="noopener">${escapeHtml(c.jiraKey)}</a>`
+              : (c.jiraKey ? escapeHtml(c.jiraKey) : '—')}
+          </td>
+          <td>${escapeHtml(c.jiraStatus || '—')}</td>
+          <td><span class="badge badge-${c.alignment}">${escapeHtml(ALIGNMENT_LABELS[c.alignment] || c.alignment)}</span></td>
+          <td>${escapeHtml(c.jiraUpdated || '—')}</td>
+        </tr>
+      `).join('');
+    }
+
+    function applyFilters() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const sfStatus = document.getElementById('sfStatusFilter').value;
+      const alignment = document.getElementById('alignmentFilter').value;
+      const jiraStatus = document.getElementById('jiraStatusFilter').value;
+
+      filteredCases = allCases.filter(c => {
+        if (q && !(`${c.client} ${c.subject} ${c.caseNumber} ${c.jiraKey || ''}`).toLowerCase().includes(q)) {
+          return false;
+        }
+        if (sfStatus === 'open' && c.isClosed) return false;
+        if (sfStatus === 'closed' && !c.isClosed) return false;
+        if (alignment === 'aligned' && !c.alignment?.startsWith('aligned')) return false;
+        if (alignment === 'mismatch' && c.alignment !== 'mismatch') return false;
+        if (alignment === 'unlinked' && c.alignment !== 'unlinked') return false;
+        if (alignment === 'jira_not_found' && c.alignment !== 'jira_not_found') return false;
+        if (jiraStatus && c.jiraStatus !== jiraStatus) return false;
+        return true;
+      });
+
+      renderTable(filteredCases);
+    }
+
+    async function loadData(manual = false) {
+      const btn = document.getElementById('refreshBtn');
+      const errorBanner = document.getElementById('errorBanner');
+      btn.classList.add('loading');
+      btn.disabled = true;
+      errorBanner.style.display = 'none';
+
+      try {
+        const url = `data/cases.json?t=${Date.now()}`;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`Failed to load data (${resp.status})`);
+        const data = await resp.json();
+
+        document.getElementById('lastUpdated').textContent =
+          `Updated ${formatDate(data.last_updated)}`;
+
+        allCases = data.cases || [];
+        renderStats(data.stats);
+        populateJiraStatusFilter(allCases);
+        applyFilters();
+      } catch (err) {
+        errorBanner.textContent = `Could not load case data: ${err.message}`;
+        errorBanner.style.display = 'block';
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    }
+
+    loadData();
+    setInterval(() => loadData(), 60 * 60 * 1000);
+  </script>
+</body>
+</html>
