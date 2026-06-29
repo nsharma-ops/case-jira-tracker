@@ -242,28 +242,32 @@ def chunk_list(items: list[str], size: int) -> list[list[str]]:
     return [items[i : i + size] for i in range(0, len(items), size)]
 
 
-def fetch_jira_issues(keys: list[str], config: dict) -> dict[str, dict]:
+def fetch_jira_issues(keys: list[str], config: dict) -> dict[str, dict] | None:
     if not keys:
         return {}
     if not JIRA_EMAIL or not JIRA_API_TOKEN:
         print("⚠  Jira credentials not set — skipping Jira fetch")
-        return {}
+        return None
 
     batch_size = config["filters"].get("jira", {}).get("batch_size", 50)
     auth = (JIRA_EMAIL, JIRA_API_TOKEN)
-    url = f"https://{JIRA_DOMAIN}/rest/api/3/search"
+    url = f"https://{JIRA_DOMAIN}/rest/api/3/search/jql"
     issues: dict[str, dict] = {}
 
     for batch in chunk_list(sorted(set(keys)), batch_size):
         jql = f"key in ({', '.join(batch)})"
-        params = {
+        payload = {
             "jql": jql,
             "maxResults": len(batch),
-            "fields": "summary,status,assignee,updated,priority",
+            "fields": ["summary", "status", "assignee", "updated", "priority"],
         }
-        resp = requests.get(url, auth=auth, params=params, timeout=60)
-        resp.raise_for_status()
-        data = resp.json()
+        try:
+            resp = requests.post(url, auth=auth, json=payload, timeout=60)
+            resp.raise_for_status()
+            data = resp.json()
+        except requests.HTTPError as err:
+            print(f"⚠  Jira fetch failed: {err}")
+            return None
 
         for issue in data.get("issues", []):
             fields = issue.get("fields", {})
@@ -390,7 +394,9 @@ def main() -> None:
         cases = existing.get("cases", [])
 
     jira_keys = [c["jiraKey"] for c in cases if c.get("jiraKey")]
-    jira_issues = fetch_jira_issues(jira_keys, config) if jira_keys else {}
+    jira_issues = fetch_jira_issues(jira_keys, config)
+    if jira_issues is None:
+        jira_issues = {}
 
     merged = merge_cases(cases, jira_issues, config, existing.get("cases"))
     stats = compute_stats(merged)

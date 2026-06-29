@@ -39,5 +39,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/cases.json
-          git diff --cached --quiet || git commit -m "chore: refresh case-jira data [skip ci]"
+          git diff --cached --quiet && echo "No data changes" || git commit -m "chore: refresh case-jira data [skip ci]"
           git push
+        continue-on-error: false
