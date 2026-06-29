@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-26T19:54:49.011440+00:00",
+  "last_updated": "2026-06-29T18:06:50.948965+00:00",
   "link_strategy": {
     "primary": "Set salesforce.jira_field in config/filters.json after discovery",
     "fallback": "Parse Jira keys from Case Subject/Description",
