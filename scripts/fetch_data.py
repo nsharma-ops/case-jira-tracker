@@ -36,6 +36,9 @@ SF_CLIENT_SECRET = os.environ.get("SF_CLIENT_SECRET", "")
 SF_LOGIN_URL = os.environ.get("SF_LOGIN_URL", "https://login.salesforce.com").rstrip("/")
 
 JIRA_KEY_RE = re.compile(r"\b([A-Z][A-Z0-9]+-\d+)\b")
+SF_CASE_ID_RE = re.compile(r"\b(500[A-Za-z0-9]{12,18})\b")
+SF_CASE_URL_RE = re.compile(r"/Case/([A-Za-z0-9]{15,18})/")
+CASE_NUMBER_RE = re.compile(r"\b(0\d{7,})\b")
 
 
 def load_json(path: Path) -> dict:
@@ -44,6 +47,164 @@ def load_json(path: Path) -> dict:
             return json.load(f)
     except Exception:
         return {}
+
+
+def adf_to_text(value: object) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, str):
+        return value
+    if isinstance(value, dict):
+        chunks: list[str] = []
+        for block in value.get("content", []):
+            for item in block.get("content", []):
+                if item.get("type") == "text":
+                    chunks.append(item.get("text", ""))
+        return " ".join(chunks).strip()
+    return str(value)
+
+
+def parse_case_entries_from_text(cases_text: str) -> list[dict]:
+    entries: list[dict] = []
+    if not cases_text:
+        return entries
+
+    for part in cases_text.split(";"):
+        part = part.strip()
+        if not part:
+            continue
+        match = re.match(r"(500[A-Za-z0-9]{15})\s*-\s*(.+)", part)
+        if not match:
+            continue
+        case_id, rest = match.group(1), match.group(2).strip()
+        client = re.sub(
+            r"\s+\d+\s*-\s*(Low|Moderate|High)\b.*$",
+            "",
+            rest,
+            flags=re.IGNORECASE,
+        ).strip()
+        entries.append({
+            "caseId": case_id,
+            "client": client or "—",
+            "linkSource": "jira_cases_field",
+        })
+    return entries
+
+
+def extract_case_ids_from_text(*texts: str | None) -> list[str]:
+    found: list[str] = []
+    seen: set[str] = set()
+    for text in texts:
+        if not text:
+            continue
+        for case_id in SF_CASE_ID_RE.findall(text):
+            if case_id not in seen:
+                seen.add(case_id)
+                found.append(case_id)
+        for case_id in SF_CASE_URL_RE.findall(text):
+            if case_id not in seen:
+                seen.add(case_id)
+                found.append(case_id)
+    return found
+
+
+def extract_case_links_from_issue(fields: dict, jira_cfg: dict) -> list[dict]:
+    cases_field = jira_cfg.get("cases_field", "customfield_13822")
+    accounts_field = jira_cfg.get("case_accounts_field", "customfield_13823")
+    sf_record_field = jira_cfg.get("salesforce_record_field", "customfield_13250")
+
+    cases_text = adf_to_text(fields.get(cases_field))
+    accounts_text = adf_to_text(fields.get(accounts_field))
+    sf_record = fields.get(sf_record_field) or ""
+    description = adf_to_text(fields.get("description"))
+
+    entries = parse_case_entries_from_text(cases_text)
+    if entries:
+        return entries
+
+    fallback_ids = extract_case_ids_from_text(str(sf_record), description)
+    if fallback_ids:
+        default_client = accounts_text.split(";")[0].strip() if accounts_text else "—"
+        return [
+            {"caseId": case_id, "client": default_client or "—", "linkSource": "jira_sf_reference"}
+            for case_id in fallback_ids
+        ]
+
+    if accounts_text:
+        return [{"caseId": "", "client": accounts_text.split(";")[0].strip(), "linkSource": "jira_case_accounts"}]
+
+    return [{"caseId": "", "client": "—", "linkSource": "unlinked"}]
+
+
+def fetch_sf_case_details(case_ids: list[str], auth: tuple[str, str], config: dict) -> dict[str, dict]:
+    if not case_ids:
+        return {}
+
+    access_token, instance_url = auth
+    status_field = sf_status_field(config) or "Jira_Ticket_Status__c"
+    link_fields = sf_link_fields(config)
+    jira_field = link_fields[0] if link_fields else "Jira_Ticket_Link__c"
+
+    fields = ["Id", "CaseNumber", "Subject", "Status", "IsClosed", "Account.Name", status_field, jira_field]
+    field_list = ", ".join(dict.fromkeys(fields))
+    details: dict[str, dict] = {}
+
+    for chunk in chunk_list(case_ids, 100):
+        id_list = "', '".join(chunk)
+        soql = (
+            f"SELECT {field_list} FROM Case "
+            f"WHERE Id IN ('{id_list}')"
+        )
+        try:
+            records = run_soql(soql, access_token, instance_url)
+        except requests.HTTPError as err:
+            print(f"⚠  Salesforce Case lookup failed: {err}")
+            return details
+
+        for record in records:
+            case_id = record.get("Id", "")
+            details[case_id] = {
+                "caseNumber": record.get("CaseNumber", ""),
+                "subject": record.get("Subject", ""),
+                "caseStatus": record.get("Status", ""),
+                "isClosed": record.get("IsClosed") is True,
+                "client": (record.get("Account") or {}).get("Name", ""),
+                "sfJiraTicketStatus": record.get(status_field),
+                "jiraKeyFromSf": record.get(jira_field),
+            }
+
+    print(f"✓ Resolved {len(details)} Salesforce Cases")
+    return details
+
+
+def enrich_with_salesforce_cases(cases: list[dict], config: dict) -> list[dict]:
+    auth = get_salesforce_auth()
+    if not auth:
+        print("⚠  No Salesforce auth — using Case IDs from Jira only")
+        return cases
+
+    case_ids = list({c["caseId"] for c in cases if c.get("caseId")})
+    sf_details = fetch_sf_case_details(case_ids, auth, config)
+
+    for row in cases:
+        case_id = row.get("caseId")
+        if not case_id or case_id not in sf_details:
+            continue
+        sf = sf_details[case_id]
+        row["caseNumber"] = sf.get("caseNumber") or row.get("caseNumber", "")
+        row["subject"] = sf.get("subject") or row.get("subject", "")
+        row["caseStatus"] = sf.get("caseStatus") or row.get("caseStatus", "")
+        row["isClosed"] = sf.get("isClosed", row.get("isClosed"))
+        row["client"] = sf.get("client") or row.get("client", "—")
+        if sf.get("sfJiraTicketStatus"):
+            row["sfJiraTicketStatus"] = sf.get("sfJiraTicketStatus")
+        if not row.get("jiraKey") and sf.get("jiraKeyFromSf"):
+            key = normalize_jira_key(str(sf.get("jiraKeyFromSf")))
+            if key:
+                row["jiraKey"] = key
+                row["linkSource"] = "salesforce_api"
+
+    return cases
 
 
 def load_config() -> dict:
@@ -281,6 +442,7 @@ def scan_all_jira_issues(config: dict) -> list[dict] | None:
         return None
 
     scan_cfg = config["filters"].get("jira_scan", {})
+    jira_cfg = config["filters"].get("jira", {})
     jql = scan_cfg.get(
         "jql",
         'project = TOD029 AND updated >= -365d ORDER BY updated DESC',
@@ -288,16 +450,31 @@ def scan_all_jira_issues(config: dict) -> list[dict] | None:
     page_size = scan_cfg.get("page_size", 100)
     max_issues = scan_cfg.get("max_issues", 500)
 
+    scan_fields = [
+        "summary",
+        "status",
+        "issuetype",
+        "assignee",
+        "updated",
+        "priority",
+        "created",
+        "description",
+        jira_cfg.get("cases_field", "customfield_13822"),
+        jira_cfg.get("case_accounts_field", "customfield_13823"),
+        jira_cfg.get("salesforce_record_field", "customfield_13250"),
+    ]
+
     auth = (JIRA_EMAIL, JIRA_API_TOKEN)
     url = f"https://{JIRA_DOMAIN}/rest/api/3/search/jql"
-    issues: list[dict] = []
+    rows: list[dict] = []
+    issue_count = 0
     next_page_token: str | None = None
 
-    while len(issues) < max_issues:
+    while issue_count < max_issues:
         payload: dict = {
             "jql": jql,
-            "maxResults": min(page_size, max_issues - len(issues)),
-            "fields": ["summary", "status", "issuetype", "assignee", "updated", "priority", "created"],
+            "maxResults": min(page_size, max_issues - issue_count),
+            "fields": scan_fields,
         }
         if next_page_token:
             payload["nextPageToken"] = next_page_token
@@ -315,13 +492,13 @@ def scan_all_jira_issues(config: dict) -> list[dict] | None:
             break
 
         for issue in batch:
+            issue_count += 1
             fields = issue.get("fields", {})
             status_name = (fields.get("status") or {}).get("name", "")
             assignee = fields.get("assignee") or {}
-            issues.append({
-                "caseId": "",
-                "caseNumber": "",
-                "client": "—",
+            case_links = extract_case_links_from_issue(fields, jira_cfg)
+
+            base = {
                 "subject": fields.get("summary", ""),
                 "type": (fields.get("issuetype") or {}).get("name", ""),
                 "caseStatus": "Open",
@@ -329,7 +506,6 @@ def scan_all_jira_issues(config: dict) -> list[dict] | None:
                 "createdDate": (fields.get("created") or "")[:10],
                 "closedDate": None,
                 "jiraKey": issue["key"],
-                "linkSource": "jira_scan",
                 "sfJiraTicketStatus": status_name,
                 "jiraStatus": status_name,
                 "jiraSummary": fields.get("summary", ""),
@@ -337,14 +513,24 @@ def scan_all_jira_issues(config: dict) -> list[dict] | None:
                 "jiraUpdated": (fields.get("updated") or "")[:10],
                 "jiraPriority": (fields.get("priority") or {}).get("name", ""),
                 "jiraUrl": f"https://{JIRA_DOMAIN}/browse/{issue['key']}",
-            })
+            }
+
+            for case_link in case_links:
+                rows.append({
+                    **base,
+                    "caseId": case_link.get("caseId", ""),
+                    "caseNumber": "",
+                    "client": case_link.get("client", "—"),
+                    "linkSource": case_link.get("linkSource", "jira_scan"),
+                })
 
         next_page_token = data.get("nextPageToken")
         if not next_page_token:
             break
 
-    print(f"✓ Scanned {len(issues)} Jira issues")
-    return issues
+    rows = enrich_with_salesforce_cases(rows, config)
+    print(f"✓ Scanned {issue_count} Jira issues ({len(rows)} case rows)")
+    return rows
 
 
 def index_sf_cases_by_jira_key(cases: list[dict]) -> dict[str, dict]:
@@ -563,7 +749,10 @@ def main() -> None:
 
     scanned = scan_all_jira_issues(config)
     if scanned is not None:
-        merged = enrich_scan_with_sf_data(scanned, sf_cases, config)
+        merged = []
+        for row in scanned:
+            row["alignment"] = compute_alignment(row, row.get("jiraStatus"), config)
+            merged.append(row)
         data_mode = "jira_scan"
     elif sf_cases:
         jira_keys = [c["jiraKey"] for c in sf_cases if c.get("jiraKey")]

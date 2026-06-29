@@ -12,7 +12,10 @@
   },
   "jira": {
     "domain": "tractionrec.atlassian.net",
-    "batch_size": 50
+    "batch_size": 50,
+    "cases_field": "customfield_13822",
+    "case_accounts_field": "customfield_13823",
+    "salesforce_record_field": "customfield_13250"
   },
   "jira_scan": {
     "jql": "project = TOD029 AND issuetype NOT IN (\"Release Management\", Epic) AND updated >= -365d ORDER BY updated DESC",

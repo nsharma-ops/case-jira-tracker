@@ -308,8 +308,8 @@
         <tr class="${rowClass(c.alignment)}">
           <td>
             ${c.caseId
-              ? `<a class="link" href="${sfCaseUrl(c.caseId)}" target="_blank" rel="noopener">${escapeHtml(c.caseNumber)}</a>`
-              : escapeHtml(c.caseNumber)}
+              ? `<a class="link" href="${sfCaseUrl(c.caseId)}" target="_blank" rel="noopener">${escapeHtml(c.caseNumber || '···' + c.caseId.slice(-8))}</a>`
+              : escapeHtml(c.caseNumber || '—')}
           </td>
           <td>${escapeHtml(c.client)}</td>
           <td class="subject-cell">
