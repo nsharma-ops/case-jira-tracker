@@ -3,54 +3,129 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TractionRec Case–Jira Status Tracker</title>
+  <title>Traction Rec · Case–Jira Status Tracker</title>
+  <link rel="icon" href="https://cdn.prod.website-files.com/6418af66f9f87737043704a4/6418b11c47b97a2c1f6dafae_traction-rec-favicon.png" type="image/png" />
   <style>
+    @font-face {
+      font-family: 'Aeonik';
+      src: url('https://cdn.prod.website-files.com/6418af66f9f87737043704a4/641ddb0f012ee80b0e9988e3_Aeonik-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Aeonik';
+      src: url('https://cdn.prod.website-files.com/6418af66f9f87737043704a4/641ddb0f387e6e5e6d861591_Aeonik-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Aeonik';
+      src: url('https://cdn.prod.website-files.com/6418af66f9f87737043704a4/641ddb0f2a9dde219124132c_Aeonik-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
-      --tr-blue: #1a3a6b;
-      --tr-blue-light: #2a5298;
-      --tr-teal: #00b4a0;
-      --bg: #f4f6fa;
+      /* Traction Rec brand tokens — tractionrec.com */
+      --tr-white-smoke: #faf8f5;
+      --tr-black: #232323;
+      --tr-turquoise: #00f6ed;
+      --tr-sea-green: #00b2ab;
+      --tr-lavender: #bcc7ff;
+      --tr-lavender-light: #e5eeff;
+      --tr-lavender-pale: #f2f6ff;
+      --tr-coral: #ffa487;
+      --tr-coral-deep: #e58b6e;
+      --tr-coral-pale: #ffd1c2;
+      --tr-primary-blue: #597ef7;
+      --tr-primary-navy: #10239e;
+      --tr-grey: #818886;
+      --tr-dark-grey: #595857;
+      --tr-border: #eaecf0;
+      --tr-border-strong: #d0d5dd;
+
+      --bg: var(--tr-white-smoke);
       --card: #ffffff;
-      --border: #e1e6ef;
-      --text: #1a2333;
-      --muted: #6b7a94;
-      --danger-bg: #fee2e2;
-      --danger-text: #991b1b;
-      --warn-bg: #fef3c7;
-      --warn-text: #92400e;
-      --success-bg: #d1fae5;
-      --success-text: #065f46;
-      --neutral-bg: #f3f4f6;
-      --neutral-text: #4b5563;
+      --border: var(--tr-border);
+      --text: var(--tr-black);
+      --muted: var(--tr-grey);
+      --danger-bg: #fff1f0;
+      --danger-text: #a61d24;
+      --warn-bg: var(--tr-coral-pale);
+      --warn-text: #9a3412;
+      --success-bg: #e6fffb;
+      --success-text: #006d75;
+      --neutral-bg: #f2f4f7;
+      --neutral-text: var(--tr-dark-grey);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+    body {
+      font-family: 'Aeonik', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
 
     header {
-      background: var(--tr-blue);
-      padding: 16px 24px;
+      background: var(--card);
+      padding: 14px 24px;
       display: flex; align-items: center; justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
       flex-wrap: wrap; gap: 12px;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(35, 35, 35, 0.04);
     }
-    header h1 { color: #fff; font-size: 20px; font-weight: 700; }
-    header h1 span { color: var(--tr-teal); }
-    .header-right { display: flex; align-items: center; gap: 12px; }
-    .last-updated { font-size: 12px; color: rgba(255,255,255,0.65); }
-    .data-source { font-size: 11px; color: rgba(255,255,255,0.5); max-width: 280px; text-align: right; }
+    .header-brand {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .header-logo {
+      height: 28px; width: auto; display: block;
+    }
+    header h1 {
+      color: var(--tr-black);
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+    header h1 span { color: var(--tr-sea-green); font-weight: 700; }
+    .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .last-updated { font-size: 12px; color: var(--tr-dark-grey); }
+    .data-source { font-size: 11px; color: var(--muted); max-width: 300px; text-align: right; }
     .btn-refresh {
-      background: var(--tr-teal); color: #fff; border: none; border-radius: 6px;
-      padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+      background: var(--tr-turquoise);
+      color: var(--tr-black);
+      border: 1px solid var(--tr-turquoise);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
-    .btn-refresh:hover { background: #009688; }
+    .btn-refresh:hover {
+      background: var(--tr-black);
+      color: #fff;
+      border-color: var(--tr-turquoise);
+    }
     .btn-refresh.loading { opacity: 0.6; cursor: not-allowed; }
     .btn-secondary {
-      background: transparent; color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 6px; padding: 7px 12px; font-size: 12px; cursor: pointer;
+      background: transparent;
+      color: var(--tr-dark-grey);
+      border: 1px solid var(--tr-border-strong);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
     }
-    .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+    .btn-secondary:hover { background: var(--tr-lavender-pale); border-color: var(--tr-lavender); }
 
-    main { max-width: 1400px; margin: 0 auto; padding: 20px 24px 40px; }
+    main { max-width: 1400px; margin: 0 auto; padding: 24px 24px 40px; }
 
     .stats-grid {
       display: grid;
@@ -61,54 +136,77 @@
     .stat-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 16px;
       padding: 16px 18px;
+      box-shadow: 0 1px 2px rgba(35, 35, 35, 0.04);
     }
-    .stat-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-value { font-size: 28px; font-weight: 700; margin-top: 6px; }
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .stat-value { font-size: 28px; font-weight: 700; margin-top: 6px; letter-spacing: -0.02em; }
     .stat-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
     .stat-card.danger .stat-value { color: var(--danger-text); }
     .stat-card.warn .stat-value { color: var(--warn-text); }
+    .stat-card.accent .stat-value { color: var(--tr-primary-navy); }
 
     .filters {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 16px;
       padding: 16px 18px;
       margin-bottom: 16px;
       display: flex; flex-wrap: wrap; gap: 12px; align-items: end;
+      box-shadow: 0 1px 2px rgba(35, 35, 35, 0.04);
     }
     .filter-group { display: flex; flex-direction: column; gap: 5px; min-width: 140px; flex: 1; }
-    .filter-group label { font-size: 12px; font-weight: 600; color: var(--muted); }
+    .filter-group label { font-size: 12px; font-weight: 600; color: var(--tr-dark-grey); }
     .filter-group input, .filter-group select {
-      padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
-      font-size: 13px; background: var(--bg); color: var(--text);
+      padding: 9px 12px;
+      border: 1px solid var(--tr-border-strong);
+      border-radius: 10px;
+      font-size: 13px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .filter-group input:focus, .filter-group select:focus {
+      outline: none;
+      border-color: var(--tr-sea-green);
+      box-shadow: 0 0 0 3px rgba(0, 246, 237, 0.25);
     }
     .filter-group.wide { min-width: 220px; flex: 2; }
 
     .table-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 16px;
       overflow: hidden;
+      box-shadow: 0 1px 2px rgba(35, 35, 35, 0.04);
     }
     .table-header {
       padding: 14px 18px;
       border-bottom: 1px solid var(--border);
       display: flex; justify-content: space-between; align-items: center;
       font-size: 13px; color: var(--muted);
+      background: linear-gradient(180deg, var(--tr-lavender-pale) 0%, #fff 100%);
     }
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th {
-      text-align: left; padding: 10px 12px;
-      font-size: 11px; font-weight: 700; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.4px;
-      border-bottom: 2px solid var(--border); white-space: nowrap;
-      background: #fafbfc;
+      text-align: left; padding: 11px 12px;
+      font-size: 11px; font-weight: 700; color: var(--tr-dark-grey);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      border-bottom: 2px solid var(--tr-lavender-light);
+      white-space: nowrap;
+      background: var(--tr-lavender-pale);
     }
     td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
-    tr:hover td { background: #f8fafc; }
+    tr:hover td { background: rgba(250, 248, 245, 0.85); }
     tr.row-mismatch td, tr.row-sf_jira_status_drift td { background: var(--danger-bg); }
     tr.row-unlinked td { background: var(--neutral-bg); }
     tr.row-jira-not-found td { background: var(--warn-bg); }
@@ -117,36 +215,46 @@
     .subject-main { font-weight: 500; line-height: 1.35; }
     .subject-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
-    a.link { color: var(--tr-blue-light); text-decoration: none; font-weight: 600; }
-    a.link:hover { text-decoration: underline; }
+    a.link { color: var(--tr-primary-navy); text-decoration: none; font-weight: 600; }
+    a.link:hover { color: var(--tr-sea-green); text-decoration: underline; }
 
     .badge {
-      display: inline-block; padding: 3px 8px; border-radius: 12px;
+      display: inline-block; padding: 3px 9px; border-radius: 999px;
       font-size: 11px; font-weight: 700; white-space: nowrap;
     }
     .badge-aligned_open, .badge-aligned_closed { background: var(--success-bg); color: var(--success-text); }
     .badge-mismatch, .badge-sf_jira_status_drift { background: var(--danger-bg); color: var(--danger-text); }
     .badge-unlinked, .badge-jira_not_found { background: var(--neutral-bg); color: var(--neutral-text); }
 
-    .status-open { color: #0369a1; font-weight: 600; }
+    .status-open { color: var(--tr-sea-green); font-weight: 600; }
     .status-closed { color: var(--muted); }
 
     footer {
-      text-align: center; padding: 20px;
+      text-align: center; padding: 24px 20px 32px;
       font-size: 12px; color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: var(--card);
     }
+    footer strong { color: var(--tr-black); font-weight: 600; }
 
     .empty-state { padding: 40px; text-align: center; color: var(--muted); }
     .error-banner {
       background: var(--danger-bg); color: var(--danger-text);
-      border: 1px solid #fecaca; border-radius: 8px;
+      border: 1px solid #ffccc7; border-radius: 12px;
       padding: 12px 16px; margin-bottom: 16px; font-size: 13px;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>TractionRec <span>Case–Jira Tracker</span></h1>
+    <div class="header-brand">
+      <img
+        class="header-logo"
+        src="https://cdn.prod.website-files.com/6418af66f9f87737043704a4/6418e44c183d3965bad7452c_traction-rec-logo.svg"
+        alt="Traction Rec"
+      />
+      <h1><span>Case–Jira</span> Status Tracker</h1>
+    </div>
     <div class="header-right">
       <span class="last-updated" id="lastUpdated">Loading…</span>
       <span class="data-source" id="dataSource"></span>
@@ -159,7 +267,7 @@
 
     <div class="stats-grid" id="statsGrid">
       <div class="stat-card"><div class="stat-label">Total Cases</div><div class="stat-value" id="statTotal">—</div><div class="stat-sub">Last 365 days</div></div>
-      <div class="stat-card"><div class="stat-label">Linked to Jira</div><div class="stat-value" id="statLinked">—</div><div class="stat-sub" id="statLinkedPct">—</div></div>
+      <div class="stat-card accent"><div class="stat-label">Linked to Jira</div><div class="stat-value" id="statLinked">—</div><div class="stat-sub" id="statLinkedPct">—</div></div>
       <div class="stat-card danger"><div class="stat-label">Status Mismatches</div><div class="stat-value" id="statMismatch">—</div><div class="stat-sub">Case vs Jira out of sync</div></div>
       <div class="stat-card warn"><div class="stat-label">Open, No Jira</div><div class="stat-value" id="statOpenUnlinked">—</div><div class="stat-sub">Open cases without a link</div></div>
     </div>
@@ -224,7 +332,7 @@
   </main>
 
   <footer>
-    TractionRec Case–Jira Status Tracker · Jira scanned live ·
+    <strong>Traction Rec</strong> Case–Jira Status Tracker · Jira scanned live ·
     <button class="btn-secondary" style="margin-left:8px" onclick="clearGithubToken()">Reset GitHub token</button>
   </footer>
 
