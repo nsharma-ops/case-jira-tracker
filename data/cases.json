@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-29T21:08:49.636117+00:00",
+  "last_updated": "2026-06-29T21:11:13.983670+00:00",
   "data_source": {
     "snapshot_date": "2026-06-29T19:16:43.496205+00:00",
     "source": "jira_bootstrap",
@@ -914,7 +914,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-25688",
       "caseId": "500JQ00000oUCQRYA4",
-      "caseNumber": "",
+      "caseNumber": "00025581",
       "client": "YMCA of Greater Boston",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -1019,7 +1019,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-25688",
       "caseId": "500JQ00000vZDOCYA4",
-      "caseNumber": "",
+      "caseNumber": "00028112",
       "client": "YMCA of Greater Boston",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -1607,7 +1607,7 @@
       "jiraPriority": "Major",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28995",
       "caseId": "500JQ00000x3TwLYAU",
-      "caseNumber": "",
+      "caseNumber": "00028763",
       "client": "Old Colony Young Mens Christian Association Inc",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -2111,7 +2111,7 @@
       "jiraPriority": "Major",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28600",
       "caseId": "500JQ00000mRPwXYAW",
-      "caseNumber": "",
+      "caseNumber": "00024752",
       "client": "92nd Street Y",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_closed"
@@ -3308,7 +3308,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-26830",
       "caseId": "500JQ00000i1ySFYAY",
-      "caseNumber": "",
+      "caseNumber": "00022035",
       "client": "Greater Philadelphia YMCA",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -3371,7 +3371,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-26830",
       "caseId": "500JQ00000mYwihYAC",
-      "caseNumber": "",
+      "caseNumber": "00024831",
       "client": "Jewish Community Alliance",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -3518,7 +3518,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-26830",
       "caseId": "500JQ00000wKVb2YAG",
-      "caseNumber": "",
+      "caseNumber": "00028457",
       "client": "YMCA of Metropolitan Chicago",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -4484,7 +4484,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28388",
       "caseId": "500JQ00000vNdrGYAS",
-      "caseNumber": "",
+      "caseNumber": "00028027",
       "client": "Greater Philadelphia YMCA",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -4631,7 +4631,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-27723",
       "caseId": "500JQ00000qkoGqYAI",
-      "caseNumber": "",
+      "caseNumber": "00026370",
       "client": "The Jewish Community Center of Louisville",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -4652,7 +4652,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-27723",
       "caseId": "500JQ00000sotgmYAA",
-      "caseNumber": "",
+      "caseNumber": "00027048",
       "client": "Valley of the Sun JCC, Inc.",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -4694,7 +4694,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-27723",
       "caseId": "500JQ00000wBcBtYAK",
-      "caseNumber": "",
+      "caseNumber": "00028365",
       "client": "The Jewish Community Center of Louisville",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -5555,7 +5555,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-26693",
       "caseId": "500JQ00000l1mvcYAA",
-      "caseNumber": "",
+      "caseNumber": "00023950",
       "client": "YMCA of Greater Charlotte",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_closed"
@@ -5597,7 +5597,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-27406",
       "caseId": "500JQ00000hdHGQYA2",
-      "caseNumber": "",
+      "caseNumber": "00021799",
       "client": "Old Colony Young Mens Christian Association Inc",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -5660,7 +5660,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-27406",
       "caseId": "500JQ00000sRfCxYAK",
-      "caseNumber": "",
+      "caseNumber": "00026956",
       "client": "Bender JCC of Greater Washington",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -5765,7 +5765,7 @@
       "jiraPriority": "Major",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-25430",
       "caseId": "500JQ00000lSHKmYAO",
-      "caseNumber": "",
+      "caseNumber": "00024234",
       "client": "The Jewish Community Center of Louisville",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
@@ -7172,7 +7172,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28169",
       "caseId": "500JQ00000rCqXNYA0",
-      "caseNumber": "",
+      "caseNumber": "00026502",
       "client": "Mandel JCC of Cleveland",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_closed"
@@ -7445,7 +7445,7 @@
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-27113",
       "caseId": "500JQ00000eaxYpYAI",
-      "caseNumber": "",
+      "caseNumber": "00020404",
       "client": "Greater Philadelphia YMCA",
       "linkSource": "jira_cases_field",
       "alignment": "aligned_open"
