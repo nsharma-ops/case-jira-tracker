@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CONFIG_DIR = ROOT / "config"
 OUTPUT_FILE = ROOT / "data" / "cases.json"
 SNAPSHOT_FILE = ROOT / "data" / "sf_cases_snapshot.json"
+REFRESH_STATUS_FILE = ROOT / "data" / "refresh_status.json"
 
 JIRA_EMAIL = os.environ.get("JIRA_EMAIL", "")
 JIRA_API_TOKEN = os.environ.get("JIRA_API_TOKEN", "")
@@ -261,6 +262,147 @@ def _fetch_sf_cases_live(config: dict, auth: tuple[str, str]) -> list[dict] | No
     return cases
 
 
+def write_refresh_status(status: str, **extra: object) -> None:
+    payload = {
+        "status": status,
+        "started_at": extra.get("started_at"),
+        "completed_at": extra.get("completed_at"),
+        "issues_scanned": extra.get("issues_scanned"),
+        "message": extra.get("message", ""),
+    }
+    REFRESH_STATUS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(REFRESH_STATUS_FILE, "w") as f:
+        json.dump(payload, f, indent=2)
+
+
+def scan_all_jira_issues(config: dict) -> list[dict] | None:
+    if not JIRA_EMAIL or not JIRA_API_TOKEN:
+        print("⚠  Jira credentials not set — cannot scan Jira")
+        return None
+
+    scan_cfg = config["filters"].get("jira_scan", {})
+    jql = scan_cfg.get(
+        "jql",
+        'project = TOD029 AND updated >= -365d ORDER BY updated DESC',
+    )
+    page_size = scan_cfg.get("page_size", 100)
+    max_issues = scan_cfg.get("max_issues", 500)
+
+    auth = (JIRA_EMAIL, JIRA_API_TOKEN)
+    url = f"https://{JIRA_DOMAIN}/rest/api/3/search/jql"
+    issues: list[dict] = []
+    next_page_token: str | None = None
+
+    while len(issues) < max_issues:
+        payload: dict = {
+            "jql": jql,
+            "maxResults": min(page_size, max_issues - len(issues)),
+            "fields": ["summary", "status", "issuetype", "assignee", "updated", "priority", "created"],
+        }
+        if next_page_token:
+            payload["nextPageToken"] = next_page_token
+
+        try:
+            resp = requests.post(url, auth=auth, json=payload, timeout=90)
+            resp.raise_for_status()
+            data = resp.json()
+        except requests.HTTPError as err:
+            print(f"⚠  Jira scan failed: {err}")
+            return None
+
+        batch = data.get("issues", [])
+        if not batch:
+            break
+
+        for issue in batch:
+            fields = issue.get("fields", {})
+            status_name = (fields.get("status") or {}).get("name", "")
+            assignee = fields.get("assignee") or {}
+            issues.append({
+                "caseId": "",
+                "caseNumber": "",
+                "client": "—",
+                "subject": fields.get("summary", ""),
+                "type": (fields.get("issuetype") or {}).get("name", ""),
+                "caseStatus": "Open",
+                "isClosed": is_jira_closed(status_name, config),
+                "createdDate": (fields.get("created") or "")[:10],
+                "closedDate": None,
+                "jiraKey": issue["key"],
+                "linkSource": "jira_scan",
+                "sfJiraTicketStatus": status_name,
+                "jiraStatus": status_name,
+                "jiraSummary": fields.get("summary", ""),
+                "jiraAssignee": assignee.get("displayName", ""),
+                "jiraUpdated": (fields.get("updated") or "")[:10],
+                "jiraPriority": (fields.get("priority") or {}).get("name", ""),
+                "jiraUrl": f"https://{JIRA_DOMAIN}/browse/{issue['key']}",
+            })
+
+        next_page_token = data.get("nextPageToken")
+        if not next_page_token:
+            break
+
+    print(f"✓ Scanned {len(issues)} Jira issues")
+    return issues
+
+
+def index_sf_cases_by_jira_key(cases: list[dict]) -> dict[str, dict]:
+    index: dict[str, dict] = {}
+    for case in cases:
+        key = case.get("jiraKey")
+        if key:
+            index[key] = case
+    return index
+
+
+def enrich_scan_with_sf_data(scanned: list[dict], sf_cases: list[dict], config: dict) -> list[dict]:
+    sf_by_jira = index_sf_cases_by_jira_key(sf_cases)
+    enriched: list[dict] = []
+    seen_jira: set[str] = set()
+
+    for row in scanned:
+        key = row.get("jiraKey")
+        if not key:
+            continue
+        seen_jira.add(key)
+        sf = sf_by_jira.get(key)
+        if sf:
+            merged = {
+                **row,
+                "caseId": sf.get("caseId", ""),
+                "caseNumber": sf.get("caseNumber", ""),
+                "client": sf.get("client") or row.get("client"),
+                "subject": sf.get("subject") or row.get("subject"),
+                "type": sf.get("type") or row.get("type"),
+                "caseStatus": sf.get("caseStatus") or row.get("caseStatus"),
+                "isClosed": sf.get("isClosed", row.get("isClosed")),
+                "createdDate": sf.get("createdDate") or row.get("createdDate"),
+                "closedDate": sf.get("closedDate"),
+                "sfJiraTicketStatus": sf.get("sfJiraTicketStatus") or row.get("sfJiraTicketStatus"),
+                "linkSource": sf.get("linkSource", row.get("linkSource")),
+            }
+        else:
+            merged = {
+                **row,
+                "caseStatus": row.get("jiraStatus") or row.get("caseStatus"),
+            }
+        merged["alignment"] = compute_alignment(merged, merged.get("jiraStatus"), config)
+        enriched.append(merged)
+
+    for sf in sf_cases:
+        key = sf.get("jiraKey")
+        if key and key not in seen_jira:
+            enriched.append({
+                **sf,
+                "jiraStatus": None,
+                "jiraUrl": f"https://{JIRA_DOMAIN}/browse/{key}" if key else None,
+                "alignment": compute_alignment(sf, None, config),
+            })
+
+    return enriched
+
+
 def chunk_list(items: list[str], size: int) -> list[list[str]]:
     return [items[i : i + size] for i in range(0, len(items), size)]
 
@@ -404,6 +546,8 @@ def compute_stats(cases: list[dict]) -> dict:
 
 def main() -> None:
     config = load_config()
+    started = datetime.now(timezone.utc).isoformat()
+    write_refresh_status("running", started_at=started, message="Scanning Jira issues…")
 
     existing: dict = {}
     try:
@@ -412,36 +556,34 @@ def main() -> None:
     except Exception:
         pass
 
-    cases = fetch_sf_cases(config)
-    snapshot_meta: dict = {}
-    if isinstance(cases, tuple):
-        cases, snapshot_meta = cases
+    sf_cases, snapshot_meta = fetch_sf_cases(config)
+    if sf_cases is None:
+        snapshot_cases, snapshot_meta = load_sf_snapshot()
+        sf_cases = snapshot_cases or []
 
-    if cases is None:
-        cases = existing.get("cases", [])
-        snapshot_meta = existing.get("data_source", {})
+    scanned = scan_all_jira_issues(config)
+    if scanned is not None:
+        merged = enrich_scan_with_sf_data(scanned, sf_cases, config)
+        data_mode = "jira_scan"
+    elif sf_cases:
+        jira_keys = [c["jiraKey"] for c in sf_cases if c.get("jiraKey")]
+        jira_issues = fetch_jira_issues(jira_keys, config) or {}
+        merged = merge_cases(sf_cases, jira_issues, config, existing.get("cases"))
+        data_mode = snapshot_meta.get("source", "snapshot")
+    else:
+        merged = existing.get("cases", [])
+        data_mode = "cached"
 
-    jira_keys = [c["jiraKey"] for c in cases if c.get("jiraKey")]
-    jira_issues = fetch_jira_issues(jira_keys, config)
-    if jira_issues is None:
-        jira_issues = {}
-
-    merged = merge_cases(cases, jira_issues, config, existing.get("cases"))
     stats = compute_stats(merged)
+    completed = datetime.now(timezone.utc).isoformat()
 
     sf_cfg = config["filters"].get("salesforce", {})
     output = {
-        "last_updated": datetime.now(timezone.utc).isoformat(),
+        "last_updated": completed,
         "data_source": {
             **snapshot_meta,
             "jira": "live_api",
-            "mode": snapshot_meta.get("source", "unknown"),
-        },
-        "link_strategy": {
-            "primary": sf_cfg.get("jira_link_fields", []),
-            "sf_status_field": sf_cfg.get("jira_status_field"),
-            "fallback": "Parse Jira keys from Case Subject/Description",
-            "overrides": "config/overrides.json",
+            "mode": data_mode,
         },
         "stats": stats,
         "cases": merged,
@@ -450,6 +592,14 @@ def main() -> None:
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_FILE, "w") as f:
         json.dump(output, f, indent=2)
+
+    write_refresh_status(
+        "idle",
+        started_at=started,
+        completed_at=completed,
+        issues_scanned=len(merged),
+        message=f"Scanned {len(merged)} issues",
+    )
 
     print(
         f"✓ Wrote {OUTPUT_FILE} "

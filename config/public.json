@@ -1,0 +1,7 @@
+{
+  "github": {
+    "owner": "nsharma-ops",
+    "repo": "case-jira-tracker",
+    "workflowFile": "refresh.yml"
+  }
+}

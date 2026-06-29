@@ -14,10 +14,10 @@
     "domain": "tractionrec.atlassian.net",
     "batch_size": 50
   },
-  "jira_bootstrap": {
-    "enabled": true,
-    "jql": "project = TOD029 AND updated >= -180d ORDER BY updated DESC",
-    "max_results": 75
+  "jira_scan": {
+    "jql": "project = TOD029 AND issuetype NOT IN (\"Release Management\", Epic) AND updated >= -365d ORDER BY updated DESC",
+    "page_size": 100,
+    "max_issues": 500
   },
   "jira_closed_statuses": [
     "Done",

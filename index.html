@@ -44,6 +44,11 @@
     }
     .btn-refresh:hover { background: #009688; }
     .btn-refresh.loading { opacity: 0.6; cursor: not-allowed; }
+    .btn-secondary {
+      background: transparent; color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 6px; padding: 7px 12px; font-size: 12px; cursor: pointer;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.08); }
 
     main { max-width: 1400px; margin: 0 auto; padding: 20px 24px 40px; }
 
@@ -145,7 +150,7 @@
     <div class="header-right">
       <span class="last-updated" id="lastUpdated">Loading…</span>
       <span class="data-source" id="dataSource"></span>
-      <button class="btn-refresh" id="refreshBtn" onclick="loadData(true)">↻ Refresh</button>
+      <button class="btn-refresh" id="refreshBtn" onclick="triggerFullRefresh()">↻ Scan &amp; Refresh</button>
     </div>
   </header>
 
@@ -219,13 +224,16 @@
   </main>
 
   <footer>
-    TractionRec Case–Jira Status Tracker · Data from Salesforce + Jira · Auto-refreshes hourly via GitHub Actions
+    TractionRec Case–Jira Status Tracker · Jira scanned live ·
+    <button class="btn-secondary" style="margin-left:8px" onclick="clearGithubToken()">Reset GitHub token</button>
   </footer>
 
   <script>
     const SF_LIGHTNING_BASE = 'https://tractionrec.lightning.force.com';
+    const GH_PAT_KEY = 'case_jira_gh_pat';
     let allCases = [];
     let filteredCases = [];
+    let appConfig = { github: { owner: 'nsharma-ops', repo: 'case-jira-tracker', workflowFile: 'refresh.yml' } };
 
     const ALIGNMENT_LABELS = {
       aligned_open: 'Aligned (open)',
@@ -347,7 +355,110 @@
       renderTable(filteredCases);
     }
 
-    async function loadData(manual = false) {
+    async function loadAppConfig() {
+      try {
+        const resp = await fetch('config/public.json');
+        if (resp.ok) appConfig = await resp.json();
+      } catch { /* use defaults */ }
+    }
+
+    function getGithubPat() {
+      return sessionStorage.getItem(GH_PAT_KEY) || '';
+    }
+
+    function promptGithubPat() {
+      const pat = prompt(
+        'One-time setup: paste a GitHub fine-grained personal access token with "Actions: Read and write" on the case-jira-tracker repo.\n\n' +
+        'Create one at: https://github.com/settings/tokens?type=beta\n' +
+        '(Repository access: case-jira-tracker only)'
+      );
+      if (pat?.trim()) sessionStorage.setItem(GH_PAT_KEY, pat.trim());
+      return pat?.trim() || '';
+    }
+
+    function clearGithubToken() {
+      sessionStorage.removeItem(GH_PAT_KEY);
+      alert('GitHub token cleared. You will be prompted again on the next Scan & Refresh.');
+    }
+
+    async function dispatchGithubWorkflow() {
+      let pat = getGithubPat();
+      if (!pat) pat = promptGithubPat();
+      if (!pat) throw new Error('GitHub token required to run a full scan');
+
+      const gh = appConfig.github;
+      const url = `https://api.github.com/repos/${gh.owner}/${gh.repo}/actions/workflows/${gh.workflowFile}/dispatches`;
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${pat}`,
+          Accept: 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+        body: JSON.stringify({ ref: 'main' }),
+      });
+
+      if (resp.status === 401 || resp.status === 403) {
+        sessionStorage.removeItem(GH_PAT_KEY);
+        throw new Error('GitHub token rejected — click Reset GitHub token and try again');
+      }
+      if (!resp.ok) {
+        const text = await resp.text();
+        throw new Error(`Could not start scan (${resp.status}): ${text}`);
+      }
+    }
+
+    async function pollUntilRefreshDone(previousCompletedAt, timeoutMs = 180000) {
+      const start = Date.now();
+      while (Date.now() - start < timeoutMs) {
+        await new Promise(r => setTimeout(r, 5000));
+        try {
+          const statusResp = await fetch(`data/refresh_status.json?t=${Date.now()}`);
+          if (!statusResp.ok) continue;
+          const status = await statusResp.json();
+          if (status.status === 'running') {
+            document.getElementById('lastUpdated').textContent = status.message || 'Scanning Jira…';
+            continue;
+          }
+          if (status.status === 'idle' && status.completed_at !== previousCompletedAt) {
+            return true;
+          }
+        } catch { /* keep polling */ }
+      }
+      return false;
+    }
+
+    async function triggerFullRefresh() {
+      const btn = document.getElementById('refreshBtn');
+      const errorBanner = document.getElementById('errorBanner');
+      btn.classList.add('loading');
+      btn.disabled = true;
+      errorBanner.style.display = 'none';
+
+      let previousCompletedAt = null;
+      try {
+        const current = await fetch(`data/refresh_status.json?t=${Date.now()}`).then(r => r.ok ? r.json() : {});
+        previousCompletedAt = current.completed_at || null;
+
+        document.getElementById('lastUpdated').textContent = 'Starting full Jira scan…';
+        await dispatchGithubWorkflow();
+        document.getElementById('lastUpdated').textContent = 'Scanning… (usually 30–90 seconds)';
+
+        const done = await pollUntilRefreshDone(previousCompletedAt);
+        if (!done) {
+          throw new Error('Scan is taking longer than expected. Check GitHub Actions and reload in a minute.');
+        }
+        await loadData(false);
+      } catch (err) {
+        errorBanner.textContent = err.message;
+        errorBanner.style.display = 'block';
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    }
+
+    async function loadData() {
       const btn = document.getElementById('refreshBtn');
       const errorBanner = document.getElementById('errorBanner');
       btn.classList.add('loading');
@@ -367,6 +478,7 @@
         const sourceBits = [];
         if (src.source === 'jira_bootstrap') sourceBits.push('SF snapshot: Jira bootstrap');
         else if (src.source === 'salesforce_api') sourceBits.push('SF: live API');
+        else if (src.mode === 'jira_scan') sourceBits.push('Jira full scan');
         else if (src.source) sourceBits.push(`SF snapshot: ${src.source}`);
         if (src.snapshot_date) sourceBits.push(`snapshotted ${formatDate(src.snapshot_date)}`);
         document.getElementById('dataSource').textContent = sourceBits.join(' · ');
@@ -384,7 +496,10 @@
       }
     }
 
-    loadData();
+    (async () => {
+      await loadAppConfig();
+      await loadData();
+    })();
     setInterval(() => loadData(), 60 * 60 * 1000);
   </script>
 </body>
