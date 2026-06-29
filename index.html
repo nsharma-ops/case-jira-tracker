@@ -342,6 +342,22 @@
     let allCases = [];
     let filteredCases = [];
     let appConfig = { github: { owner: 'nsharma-ops', repo: 'case-jira-tracker', workflowFile: 'refresh.yml' } };
+    let basePath = detectBasePath();
+
+    function detectBasePath() {
+      const internal = location.pathname.match(/^(\/case-jira-tracker)(?=\/|$)/);
+      if (internal) return internal[1];
+      if (location.hostname.endsWith('.github.io')) {
+        const segment = location.pathname.split('/').filter(Boolean)[0];
+        return segment ? `/${segment}` : '';
+      }
+      return '';
+    }
+
+    function assetUrl(path) {
+      const clean = String(path).replace(/^\//, '');
+      return basePath ? `${basePath}/${clean}` : clean;
+    }
 
     const ALIGNMENT_LABELS = {
       aligned_open: 'Aligned (open)',
@@ -465,8 +481,13 @@
 
     async function loadAppConfig() {
       try {
-        const resp = await fetch('config/public.json');
-        if (resp.ok) appConfig = await resp.json();
+        const resp = await fetch(assetUrl('config/public.json'));
+        if (resp.ok) {
+          appConfig = await resp.json();
+          if (!basePath && appConfig.basePath) {
+            basePath = appConfig.basePath.replace(/\/$/, '');
+          }
+        }
       } catch { /* use defaults */ }
     }
 
@@ -521,7 +542,7 @@
       while (Date.now() - start < timeoutMs) {
         await new Promise(r => setTimeout(r, 5000));
         try {
-          const statusResp = await fetch(`data/refresh_status.json?t=${Date.now()}`);
+          const statusResp = await fetch(`${assetUrl('data/refresh_status.json')}?t=${Date.now()}`);
           if (!statusResp.ok) continue;
           const status = await statusResp.json();
           if (status.status === 'running') {
@@ -545,7 +566,7 @@
 
       let previousCompletedAt = null;
       try {
-        const current = await fetch(`data/refresh_status.json?t=${Date.now()}`).then(r => r.ok ? r.json() : {});
+        const current = await fetch(`${assetUrl('data/refresh_status.json')}?t=${Date.now()}`).then(r => r.ok ? r.json() : {});
         previousCompletedAt = current.completed_at || null;
 
         document.getElementById('lastUpdated').textContent = 'Starting full Jira scan…';
@@ -574,7 +595,7 @@
       errorBanner.style.display = 'none';
 
       try {
-        const url = `data/cases.json?t=${Date.now()}`;
+        const url = `${assetUrl('data/cases.json')}?t=${Date.now()}`;
         const resp = await fetch(url);
         if (!resp.ok) throw new Error(`Failed to load data (${resp.status})`);
         const data = await resp.json();

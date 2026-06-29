@@ -1,4 +1,5 @@
 {
+  "basePath": "/case-jira-tracker",
   "github": {
     "owner": "nsharma-ops",
     "repo": "case-jira-tracker",
