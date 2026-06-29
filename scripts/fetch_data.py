@@ -108,6 +108,43 @@ def extract_case_ids_from_text(*texts: str | None) -> list[str]:
     return found
 
 
+def extract_case_number_map_from_adf(value: object) -> dict[str, str]:
+    """Map Salesforce Case Id -> CaseNumber from hyperlinked text in Jira ADF."""
+    mapping: dict[str, str] = {}
+
+    def walk(node: object) -> None:
+        if isinstance(node, dict):
+            if node.get("type") == "text":
+                text = (node.get("text") or "").strip()
+                number_match = CASE_NUMBER_RE.search(text)
+                if not number_match:
+                    return
+                for mark in node.get("marks", []):
+                    if mark.get("type") != "link":
+                        continue
+                    href = (mark.get("attrs") or {}).get("href", "")
+                    url_match = SF_CASE_URL_RE.search(href)
+                    if url_match:
+                        mapping[url_match.group(1)] = number_match.group(1)
+            for child in node.get("content", []) or []:
+                walk(child)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(value)
+    return mapping
+
+
+def apply_singleton_case_number(entries: list[dict], description_text: str) -> None:
+    if len(entries) != 1 or entries[0].get("caseNumber"):
+        return
+    numbers = CASE_NUMBER_RE.findall(description_text or "")
+    unique = list(dict.fromkeys(numbers))
+    if len(unique) == 1:
+        entries[0]["caseNumber"] = unique[0]
+
+
 def extract_case_links_from_issue(fields: dict, jira_cfg: dict) -> list[dict]:
     cases_field = jira_cfg.get("cases_field", "customfield_13822")
     accounts_field = jira_cfg.get("case_accounts_field", "customfield_13823")
@@ -117,23 +154,34 @@ def extract_case_links_from_issue(fields: dict, jira_cfg: dict) -> list[dict]:
     accounts_text = adf_to_text(fields.get(accounts_field))
     sf_record = fields.get(sf_record_field) or ""
     description = adf_to_text(fields.get("description"))
+    number_map = extract_case_number_map_from_adf(fields.get("description"))
 
     entries = parse_case_entries_from_text(cases_text)
     if entries:
+        for entry in entries:
+            case_id = entry.get("caseId", "")
+            if case_id and case_id in number_map:
+                entry["caseNumber"] = number_map[case_id]
+        apply_singleton_case_number(entries, description)
         return entries
 
     fallback_ids = extract_case_ids_from_text(str(sf_record), description)
     if fallback_ids:
         default_client = accounts_text.split(";")[0].strip() if accounts_text else "—"
         return [
-            {"caseId": case_id, "client": default_client or "—", "linkSource": "jira_sf_reference"}
+            {
+                "caseId": case_id,
+                "caseNumber": number_map.get(case_id, ""),
+                "client": default_client or "—",
+                "linkSource": "jira_sf_reference",
+            }
             for case_id in fallback_ids
         ]
 
     if accounts_text:
-        return [{"caseId": "", "client": accounts_text.split(";")[0].strip(), "linkSource": "jira_case_accounts"}]
+        return [{"caseId": "", "caseNumber": "", "client": accounts_text.split(";")[0].strip(), "linkSource": "jira_case_accounts"}]
 
-    return [{"caseId": "", "client": "—", "linkSource": "unlinked"}]
+    return [{"caseId": "", "caseNumber": "", "client": "—", "linkSource": "unlinked"}]
 
 
 def fetch_sf_case_details(case_ids: list[str], auth: tuple[str, str], config: dict) -> dict[str, dict]:
@@ -519,7 +567,7 @@ def scan_all_jira_issues(config: dict) -> list[dict] | None:
                 rows.append({
                     **base,
                     "caseId": case_link.get("caseId", ""),
-                    "caseNumber": "",
+                    "caseNumber": case_link.get("caseNumber", ""),
                     "client": case_link.get("client", "—"),
                     "linkSource": case_link.get("linkSource", "jira_scan"),
                 })
