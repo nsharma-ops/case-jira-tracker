@@ -37,6 +37,7 @@
     header h1 span { color: var(--tr-teal); }
     .header-right { display: flex; align-items: center; gap: 12px; }
     .last-updated { font-size: 12px; color: rgba(255,255,255,0.65); }
+    .data-source { font-size: 11px; color: rgba(255,255,255,0.5); max-width: 280px; text-align: right; }
     .btn-refresh {
       background: var(--tr-teal); color: #fff; border: none; border-radius: 6px;
       padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
@@ -143,6 +144,7 @@
     <h1>TractionRec <span>Case–Jira Tracker</span></h1>
     <div class="header-right">
       <span class="last-updated" id="lastUpdated">Loading…</span>
+      <span class="data-source" id="dataSource"></span>
       <button class="btn-refresh" id="refreshBtn" onclick="loadData(true)">↻ Refresh</button>
     </div>
   </header>
@@ -359,7 +361,15 @@
         const data = await resp.json();
 
         document.getElementById('lastUpdated').textContent =
-          `Updated ${formatDate(data.last_updated)}`;
+          `Jira updated ${formatDate(data.last_updated)}`;
+
+        const src = data.data_source || {};
+        const sourceBits = [];
+        if (src.source === 'jira_bootstrap') sourceBits.push('SF snapshot: Jira bootstrap');
+        else if (src.source === 'salesforce_api') sourceBits.push('SF: live API');
+        else if (src.source) sourceBits.push(`SF snapshot: ${src.source}`);
+        if (src.snapshot_date) sourceBits.push(`snapshotted ${formatDate(src.snapshot_date)}`);
+        document.getElementById('dataSource').textContent = sourceBits.join(' · ');
 
         allCases = data.cases || [];
         renderStats(data.stats);

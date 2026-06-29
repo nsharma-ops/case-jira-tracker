@@ -14,6 +14,11 @@
     "domain": "tractionrec.atlassian.net",
     "batch_size": 50
   },
+  "jira_bootstrap": {
+    "enabled": true,
+    "jql": "project = TOD029 AND updated >= -180d ORDER BY updated DESC",
+    "max_results": 75
+  },
   "jira_closed_statuses": [
     "Done",
     "Closed",

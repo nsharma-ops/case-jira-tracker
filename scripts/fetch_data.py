@@ -23,6 +23,7 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG_DIR = ROOT / "config"
 OUTPUT_FILE = ROOT / "data" / "cases.json"
+SNAPSHOT_FILE = ROOT / "data" / "sf_cases_snapshot.json"
 
 JIRA_EMAIL = os.environ.get("JIRA_EMAIL", "")
 JIRA_API_TOKEN = os.environ.get("JIRA_API_TOKEN", "")
@@ -185,12 +186,34 @@ def run_soql(soql: str, access_token: str, instance_url: str) -> list[dict]:
     return records
 
 
-def fetch_sf_cases(config: dict) -> list[dict] | None:
-    auth = get_salesforce_auth()
-    if not auth:
-        print("⚠  Salesforce credentials not set — skipping SF fetch")
-        return None
+def load_sf_snapshot() -> tuple[list[dict], dict]:
+    data = load_json(SNAPSHOT_FILE)
+    cases = data.get("cases", [])
+    meta = {
+        "snapshot_date": data.get("snapshot_date"),
+        "source": data.get("source", "sf_cases_snapshot.json"),
+        "note": data.get("note"),
+    }
+    return cases, meta
 
+
+def fetch_sf_cases(config: dict) -> tuple[list[dict] | None, dict]:
+    auth = get_salesforce_auth()
+    if auth:
+        cases = _fetch_sf_cases_live(config, auth)
+        if cases is not None:
+            return cases, {"source": "salesforce_api", "snapshot_date": None}
+
+    snapshot_cases, snapshot_meta = load_sf_snapshot()
+    if snapshot_cases:
+        print(f"✓ Loaded {len(snapshot_cases)} cases from snapshot ({snapshot_meta.get('source')})")
+        return snapshot_cases, snapshot_meta
+
+    print("⚠  No Salesforce API credentials and no snapshot file — skipping SF load")
+    return None, {}
+
+
+def _fetch_sf_cases_live(config: dict, auth: tuple[str, str]) -> list[dict] | None:
     access_token, instance_url = auth
     link_fields = sf_link_fields(config)
     status_field = sf_status_field(config)
@@ -390,8 +413,13 @@ def main() -> None:
         pass
 
     cases = fetch_sf_cases(config)
+    snapshot_meta: dict = {}
+    if isinstance(cases, tuple):
+        cases, snapshot_meta = cases
+
     if cases is None:
         cases = existing.get("cases", [])
+        snapshot_meta = existing.get("data_source", {})
 
     jira_keys = [c["jiraKey"] for c in cases if c.get("jiraKey")]
     jira_issues = fetch_jira_issues(jira_keys, config)
@@ -404,6 +432,11 @@ def main() -> None:
     sf_cfg = config["filters"].get("salesforce", {})
     output = {
         "last_updated": datetime.now(timezone.utc).isoformat(),
+        "data_source": {
+            **snapshot_meta,
+            "jira": "live_api",
+            "mode": snapshot_meta.get("source", "unknown"),
+        },
         "link_strategy": {
             "primary": sf_cfg.get("jira_link_fields", []),
             "sf_status_field": sf_cfg.get("jira_status_field"),
