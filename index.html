@@ -103,7 +103,7 @@
     }
     td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
     tr:hover td { background: #f8fafc; }
-    tr.row-mismatch td { background: var(--danger-bg); }
+    tr.row-mismatch td, tr.row-sf_jira_status_drift td { background: var(--danger-bg); }
     tr.row-unlinked td { background: var(--neutral-bg); }
     tr.row-jira-not-found td { background: var(--warn-bg); }
 
@@ -119,7 +119,7 @@
       font-size: 11px; font-weight: 700; white-space: nowrap;
     }
     .badge-aligned_open, .badge-aligned_closed { background: var(--success-bg); color: var(--success-text); }
-    .badge-mismatch { background: var(--danger-bg); color: var(--danger-text); }
+    .badge-mismatch, .badge-sf_jira_status_drift { background: var(--danger-bg); color: var(--danger-text); }
     .badge-unlinked, .badge-jira_not_found { background: var(--neutral-bg); color: var(--neutral-text); }
 
     .status-open { color: #0369a1; font-weight: 600; }
@@ -201,6 +201,7 @@
               <th>Client</th>
               <th>Subject</th>
               <th>SF Status</th>
+              <th>SF Jira Status</th>
               <th>Jira Key</th>
               <th>Jira Status</th>
               <th>Alignment</th>
@@ -208,7 +209,7 @@
             </tr>
           </thead>
           <tbody id="caseTableBody">
-            <tr><td colspan="8" class="empty-state">Loading cases…</td></tr>
+            <tr><td colspan="9" class="empty-state">Loading cases…</td></tr>
           </tbody>
         </table>
       </div>
@@ -227,7 +228,8 @@
     const ALIGNMENT_LABELS = {
       aligned_open: 'Aligned (open)',
       aligned_closed: 'Aligned (closed)',
-      mismatch: 'Mismatch',
+      mismatch: 'Case/Jira mismatch',
+      sf_jira_status_drift: 'SF status stale',
       unlinked: 'Unlinked',
       jira_not_found: 'Jira not found',
     };
@@ -276,7 +278,7 @@
     }
 
     function rowClass(alignment) {
-      if (alignment === 'mismatch') return 'row-mismatch';
+      if (alignment === 'mismatch' || alignment === 'sf_jira_status_drift') return `row-${alignment}`;
       if (alignment === 'unlinked') return 'row-unlinked';
       if (alignment === 'jira_not_found') return 'row-jira-not-found';
       return '';
@@ -288,7 +290,7 @@
         `${cases.length} case${cases.length === 1 ? '' : 's'} shown`;
 
       if (!cases.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No cases match the current filters.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No cases match the current filters.</td></tr>';
         return;
       }
 
@@ -307,6 +309,7 @@
           <td>
             <span class="${c.isClosed ? 'status-closed' : 'status-open'}">${escapeHtml(c.caseStatus)}</span>
           </td>
+          <td>${escapeHtml(c.sfJiraTicketStatus || '—')}</td>
           <td>
             ${c.jiraKey && c.jiraUrl
               ? `<a class="link" href="${escapeHtml(c.jiraUrl)}" target="_blank" rel="noopener">${escapeHtml(c.jiraKey)}</a>`
@@ -332,7 +335,7 @@
         if (sfStatus === 'open' && c.isClosed) return false;
         if (sfStatus === 'closed' && !c.isClosed) return false;
         if (alignment === 'aligned' && !c.alignment?.startsWith('aligned')) return false;
-        if (alignment === 'mismatch' && c.alignment !== 'mismatch') return false;
+        if (alignment === 'mismatch' && c.alignment !== 'mismatch' && c.alignment !== 'sf_jira_status_drift') return false;
         if (alignment === 'unlinked' && c.alignment !== 'unlinked') return false;
         if (alignment === 'jira_not_found' && c.alignment !== 'jira_not_found') return false;
         if (jiraStatus && c.jiraStatus !== jiraStatus) return false;

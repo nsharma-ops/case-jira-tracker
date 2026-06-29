@@ -4,11 +4,10 @@ Fetches Salesforce Cases and linked Jira issue statuses.
 Writes to data/cases.json for the GitHub Pages dashboard.
 
 Required environment variables (set as GitHub Secrets):
-  JIRA_EMAIL        - Atlassian account email
-  JIRA_API_TOKEN    - Jira API token
-  JIRA_DOMAIN       - e.g. tractionrec.atlassian.net
-  SF_INSTANCE_URL   - e.g. https://tractionrec.my.salesforce.com
-  SF_ACCESS_TOKEN   - Salesforce access token
+  JIRA_EMAIL, JIRA_API_TOKEN, JIRA_DOMAIN
+  SF_INSTANCE_URL + one of:
+    - SF_CLIENT_ID + SF_CLIENT_SECRET (+ optional SF_LOGIN_URL)  [preferred]
+    - SF_ACCESS_TOKEN
 """
 
 from __future__ import annotations
@@ -30,6 +29,9 @@ JIRA_API_TOKEN = os.environ.get("JIRA_API_TOKEN", "")
 JIRA_DOMAIN = os.environ.get("JIRA_DOMAIN", "tractionrec.atlassian.net")
 SF_INSTANCE_URL = os.environ.get("SF_INSTANCE_URL", "").rstrip("/")
 SF_ACCESS_TOKEN = os.environ.get("SF_ACCESS_TOKEN", "")
+SF_CLIENT_ID = os.environ.get("SF_CLIENT_ID", "")
+SF_CLIENT_SECRET = os.environ.get("SF_CLIENT_SECRET", "")
+SF_LOGIN_URL = os.environ.get("SF_LOGIN_URL", "https://login.salesforce.com").rstrip("/")
 
 JIRA_KEY_RE = re.compile(r"\b([A-Z][A-Z0-9]+-\d+)\b")
 
@@ -51,11 +53,36 @@ def load_config() -> dict:
     }
 
 
-def resolve_jira_field(config: dict) -> str | None:
+def sf_link_fields(config: dict) -> list[str]:
     sf_cfg = config["filters"].get("salesforce", {})
-    explicit = sf_cfg.get("jira_field")
-    if explicit:
-        return explicit
+    fields = sf_cfg.get("jira_link_fields") or []
+    if not fields and sf_cfg.get("jira_field"):
+        fields = [sf_cfg["jira_field"]]
+    return fields
+
+
+def sf_status_field(config: dict) -> str | None:
+    return config["filters"].get("salesforce", {}).get("jira_status_field")
+
+
+def get_salesforce_auth() -> tuple[str, str] | None:
+    if SF_CLIENT_ID and SF_CLIENT_SECRET:
+        resp = requests.post(
+            f"{SF_LOGIN_URL}/services/oauth2/token",
+            data={
+                "grant_type": "client_credentials",
+                "client_id": SF_CLIENT_ID,
+                "client_secret": SF_CLIENT_SECRET,
+            },
+            timeout=60,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        return data["access_token"], data.get("instance_url", SF_INSTANCE_URL).rstrip("/")
+
+    if SF_ACCESS_TOKEN and SF_INSTANCE_URL:
+        return SF_ACCESS_TOKEN, SF_INSTANCE_URL
+
     return None
 
 
@@ -75,7 +102,11 @@ def normalize_jira_key(value: str | None) -> str | None:
     return extract_jira_key(value)
 
 
-def resolve_jira_key(record: dict, overrides: dict, jira_field: str | None) -> tuple[str | None, str]:
+def resolve_jira_key(
+    record: dict,
+    overrides: dict,
+    jira_link_fields: list[str],
+) -> tuple[str | None, str]:
     case_number = record.get("CaseNumber", "")
     case_id = record.get("Id", "")
 
@@ -83,11 +114,13 @@ def resolve_jira_key(record: dict, overrides: dict, jira_field: str | None) -> t
         if key and key in overrides:
             return normalize_jira_key(overrides[key]), "override"
 
-    if jira_field:
-        field_value = record.get(jira_field)
-        key = normalize_jira_key(field_value if isinstance(field_value, str) else None)
+    for field in jira_link_fields:
+        field_value = record.get(field)
+        if field_value is None:
+            continue
+        key = normalize_jira_key(str(field_value))
         if key:
-            return key, "custom_field"
+            return key, field
 
     for source in ("Subject", "Description"):
         key = extract_jira_key(record.get(source))
@@ -97,10 +130,12 @@ def resolve_jira_key(record: dict, overrides: dict, jira_field: str | None) -> t
     return None, "unlinked"
 
 
-def build_soql(config: dict, jira_field: str | None) -> str:
+def build_soql(config: dict) -> str:
     sf_cfg = config["filters"].get("salesforce", {})
     days_back = sf_cfg.get("case_days_back", 365)
     limit = sf_cfg.get("limit", 2000)
+    link_fields = sf_link_fields(config)
+    status_field = sf_status_field(config)
 
     fields = [
         "Id",
@@ -114,8 +149,11 @@ def build_soql(config: dict, jira_field: str | None) -> str:
         "ClosedDate",
         "Description",
     ]
-    if jira_field:
-        fields.append(jira_field)
+    for field in link_fields:
+        if field not in fields:
+            fields.append(field)
+    if status_field and status_field not in fields:
+        fields.append(status_field)
 
     field_list = ", ".join(fields)
     return (
@@ -129,9 +167,9 @@ def build_soql(config: dict, jira_field: str | None) -> str:
     )
 
 
-def run_soql(soql: str) -> list[dict]:
-    url = f"{SF_INSTANCE_URL}/services/data/v60.0/query"
-    headers = {"Authorization": f"Bearer {SF_ACCESS_TOKEN}"}
+def run_soql(soql: str, access_token: str, instance_url: str) -> list[dict]:
+    url = f"{instance_url}/services/data/v60.0/query"
+    headers = {"Authorization": f"Bearer {access_token}"}
     params: dict | None = {"q": soql}
     records: list[dict] = []
 
@@ -141,28 +179,34 @@ def run_soql(soql: str) -> list[dict]:
         data = resp.json()
         records.extend(data.get("records", []))
         next_url = data.get("nextRecordsUrl")
-        url = f"{SF_INSTANCE_URL}{next_url}" if next_url else None
+        url = f"{instance_url}{next_url}" if next_url else None
         params = None
 
     return records
 
 
 def fetch_sf_cases(config: dict) -> list[dict] | None:
-    if not SF_INSTANCE_URL or not SF_ACCESS_TOKEN:
+    auth = get_salesforce_auth()
+    if not auth:
         print("⚠  Salesforce credentials not set — skipping SF fetch")
         return None
 
-    jira_field = resolve_jira_field(config)
-    soql = build_soql(config, jira_field)
+    access_token, instance_url = auth
+    link_fields = sf_link_fields(config)
+    status_field = sf_status_field(config)
+    soql = build_soql(config)
 
     try:
-        records = run_soql(soql)
+        records = run_soql(soql, access_token, instance_url)
     except requests.HTTPError as err:
-        if jira_field and err.response is not None and err.response.status_code == 400:
-            print(f"⚠  SOQL failed with jira field {jira_field}; retrying without custom field")
-            soql = build_soql(config, None)
-            records = run_soql(soql)
-            jira_field = None
+        if err.response is not None and err.response.status_code == 400:
+            print("⚠  SOQL failed with configured Jira fields; retrying with base fields only")
+            config["filters"]["salesforce"]["jira_link_fields"] = []
+            config["filters"]["salesforce"]["jira_status_field"] = None
+            soql = build_soql(config)
+            records = run_soql(soql, access_token, instance_url)
+            link_fields = []
+            status_field = None
         else:
             raise
 
@@ -173,7 +217,8 @@ def fetch_sf_cases(config: dict) -> list[dict] | None:
         if not client:
             continue
 
-        jira_key, link_source = resolve_jira_key(record, overrides, jira_field)
+        jira_key, link_source = resolve_jira_key(record, overrides, link_fields)
+        sf_jira_status = record.get(status_field) if status_field else None
         cases.append({
             "caseId": record.get("Id", ""),
             "caseNumber": record.get("CaseNumber", ""),
@@ -186,6 +231,7 @@ def fetch_sf_cases(config: dict) -> list[dict] | None:
             "closedDate": (record.get("ClosedDate") or "")[:10] or None,
             "jiraKey": jira_key,
             "linkSource": link_source if jira_key else "unlinked",
+            "sfJiraTicketStatus": sf_jira_status or None,
         })
 
     print(f"✓ Fetched {len(cases)} cases from Salesforce")
@@ -246,11 +292,21 @@ def is_jira_closed(status: str, config: dict) -> bool:
     return normalized in {"done", "closed", "resolved", "released", "complete", "cancelled"}
 
 
+def statuses_differ(sf_status: str | None, jira_status: str | None) -> bool:
+    if not sf_status or not jira_status:
+        return False
+    return sf_status.strip().lower() != jira_status.strip().lower()
+
+
 def compute_alignment(case: dict, jira_status: str | None, config: dict) -> str:
     if not case.get("jiraKey"):
         return "unlinked"
     if not jira_status:
         return "jira_not_found"
+
+    sf_jira_status = case.get("sfJiraTicketStatus")
+    if statuses_differ(sf_jira_status, jira_status):
+        return "sf_jira_status_drift"
 
     case_closed = case.get("isClosed") is True
     jira_closed = is_jira_closed(jira_status, config)
@@ -262,7 +318,12 @@ def compute_alignment(case: dict, jira_status: str | None, config: dict) -> str:
     return "mismatch"
 
 
-def merge_cases(cases: list[dict], jira_issues: dict[str, dict], config: dict, existing_cases: list[dict] | None = None) -> list[dict]:
+def merge_cases(
+    cases: list[dict],
+    jira_issues: dict[str, dict],
+    config: dict,
+    existing_cases: list[dict] | None = None,
+) -> list[dict]:
     existing_by_key = {}
     for row in existing_cases or []:
         for key in (row.get("caseId"), row.get("caseNumber")):
@@ -302,11 +363,8 @@ def merge_cases(cases: list[dict], jira_issues: dict[str, dict], config: dict, e
 
 def compute_stats(cases: list[dict]) -> dict:
     linked = [c for c in cases if c.get("jiraKey")]
-    mismatches = [c for c in cases if c.get("alignment") == "mismatch"]
-    unlinked_open = [
-        c for c in cases
-        if not c.get("jiraKey") and not c.get("isClosed")
-    ]
+    mismatches = [c for c in cases if c.get("alignment") in ("mismatch", "sf_jira_status_drift")]
+    unlinked_open = [c for c in cases if not c.get("jiraKey") and not c.get("isClosed")]
     return {
         "total_cases": len(cases),
         "linked": len(linked),
@@ -337,12 +395,14 @@ def main() -> None:
     merged = merge_cases(cases, jira_issues, config, existing.get("cases"))
     stats = compute_stats(merged)
 
+    sf_cfg = config["filters"].get("salesforce", {})
     output = {
         "last_updated": datetime.now(timezone.utc).isoformat(),
         "link_strategy": {
-            "primary": "Set salesforce.jira_field in config/filters.json after discovery",
+            "primary": sf_cfg.get("jira_link_fields", []),
+            "sf_status_field": sf_cfg.get("jira_status_field"),
             "fallback": "Parse Jira keys from Case Subject/Description",
-            "overrides": "config/overrides.json for manual links",
+            "overrides": "config/overrides.json",
         },
         "stats": stats,
         "cases": merged,

@@ -27,25 +27,16 @@ GitHub Pages serves index.html + data/cases.json
 
 ## Case ↔ Jira linking strategy
 
-No single link field was found in existing codebases. This app resolves links in priority order:
+Traction Rec Cases use these Salesforce fields (in priority order):
 
-1. **Manual override** — `config/overrides.json` (`CaseNumber` or Case `Id` → Jira key)
-2. **Salesforce custom field** — set `salesforce.jira_field` in `config/filters.json` after discovery (e.g. `Jira_Issue_Key__c`)
-3. **Parse from text** — regex on Case `Subject` and `Description` (e.g. `TOD029-12345`)
+| Label | API name | Purpose |
+|-------|----------|---------|
+| Jira Ticket Link | `Jira_Ticket_Link__c` | Primary field for TOD bug/enhancement tickets |
+| Jira Ticket | `Jira_Ticket__c` | Older/internal name for the same link |
+| Jira Ticket Number | `Jira_Ticket_Number__c` | Used by n8n status sync |
+| Jira Ticket Status | `Jira_Ticket_Status__c` | SF-side Jira status (synced via n8n; shown for drift detection) |
 
-### Discovery checklist (run once in Salesforce)
-
-1. Setup → Object Manager → Case → Fields
-2. Look for fields like `Jira_Issue_Key__c`, `Jira_Ticket__c`, `External_Ticket_ID__c`
-3. If found, set in `config/filters.json`:
-
-```json
-"salesforce": {
-  "jira_field": "Jira_Issue_Key__c"
-}
-```
-
-4. Commit and push — the next GitHub Action run will use the field as the primary link source.
+Configured in `config/filters.json`. Fallback: parse keys from Subject/Description. Manual overrides in `config/overrides.json`.
 
 ---
 
@@ -75,7 +66,10 @@ Repo **Settings → Pages → Source: Deploy from a branch → Branch: `main` / 
 | `JIRA_EMAIL` | Your Atlassian email (e.g. `you@tractionrec.com`) |
 | `JIRA_API_TOKEN` | API token from https://id.atlassian.com/manage-profile/security/api-tokens |
 | `SF_INSTANCE_URL` | Salesforce org URL (e.g. `https://tractionrec.my.salesforce.com`) |
-| `SF_ACCESS_TOKEN` | Salesforce access token — see below |
+| `SF_CLIENT_ID` | Connected App Consumer Key (preferred) |
+| `SF_CLIENT_SECRET` | Connected App Consumer Secret (preferred) |
+| `SF_LOGIN_URL` | Optional — `https://login.salesforce.com` or your My Domain login URL |
+| `SF_ACCESS_TOKEN` | Optional fallback if not using Connected App |
 
 #### Getting a Salesforce access token
 

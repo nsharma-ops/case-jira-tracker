@@ -2,13 +2,12 @@
   "salesforce": {
     "case_days_back": 365,
     "limit": 2000,
-    "jira_field": null,
-    "jira_field_candidates": [
-      "Jira_Issue_Key__c",
+    "jira_link_fields": [
+      "Jira_Ticket_Link__c",
       "Jira_Ticket__c",
-      "Jira_Ticket_Number__c",
-      "External_Ticket_ID__c"
+      "Jira_Ticket_Number__c"
     ],
+    "jira_status_field": "Jira_Ticket_Status__c",
     "lightning_base": "https://tractionrec.lightning.force.com"
   },
   "jira": {
