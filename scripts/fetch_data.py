@@ -145,6 +145,14 @@ def apply_singleton_case_number(entries: list[dict], description_text: str) -> N
         entries[0]["caseNumber"] = unique[0]
 
 
+def extract_case_number_map_from_issue_fields(fields: dict) -> dict[str, str]:
+    mapping: dict[str, str] = {}
+    mapping.update(extract_case_number_map_from_adf(fields.get("description")))
+    for comment in (fields.get("comment") or {}).get("comments", []):
+        mapping.update(extract_case_number_map_from_adf(comment.get("body")))
+    return mapping
+
+
 def extract_case_links_from_issue(fields: dict, jira_cfg: dict) -> list[dict]:
     cases_field = jira_cfg.get("cases_field", "customfield_13822")
     accounts_field = jira_cfg.get("case_accounts_field", "customfield_13823")
@@ -154,7 +162,7 @@ def extract_case_links_from_issue(fields: dict, jira_cfg: dict) -> list[dict]:
     accounts_text = adf_to_text(fields.get(accounts_field))
     sf_record = fields.get(sf_record_field) or ""
     description = adf_to_text(fields.get("description"))
-    number_map = extract_case_number_map_from_adf(fields.get("description"))
+    number_map = extract_case_number_map_from_issue_fields(fields)
 
     entries = parse_case_entries_from_text(cases_text)
     if entries:
@@ -507,6 +515,7 @@ def scan_all_jira_issues(config: dict) -> list[dict] | None:
         "priority",
         "created",
         "description",
+        "comment",
         jira_cfg.get("cases_field", "customfield_13822"),
         jira_cfg.get("case_accounts_field", "customfield_13823"),
         jira_cfg.get("salesforce_record_field", "customfield_13250"),
