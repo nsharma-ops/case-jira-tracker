@@ -1,30 +1,7 @@
 {
-  "last_updated": "2026-06-29T19:16:44.817362+00:00",
-  "data_source": {
-    "snapshot_date": "2026-06-29T19:16:43.496205+00:00",
-    "source": "jira_bootstrap",
-    "note": "Placeholder snapshot from Jira. Replace by running import_sf_export.py with a Salesforce CSV export.",
-    "jira": "live_api",
-    "mode": "jira_bootstrap"
-  },
-  "link_strategy": {
-    "primary": [
-      "Jira_Ticket_Link__c",
-      "Jira_Ticket__c",
-      "Jira_Ticket_Number__c"
-    ],
-    "sf_status_field": "Jira_Ticket_Status__c",
-    "fallback": "Parse Jira keys from Case Subject/Description",
-    "overrides": "config/overrides.json"
-  },
-  "stats": {
-    "total_cases": 75,
-    "linked": 75,
-    "unlinked": 0,
-    "status_mismatch": 14,
-    "open_unlinked": 0,
-    "linked_pct": 100
-  },
+  "snapshot_date": "2026-06-29T19:16:43.496205+00:00",
+  "source": "jira_bootstrap",
+  "note": "Placeholder snapshot from Jira. Replace by running import_sf_export.py with a Salesforce CSV export.",
   "cases": [
     {
       "caseId": "",
@@ -38,14 +15,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29978",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Front Desk-to process payment for a booking at checkout",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29978",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -59,14 +29,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29499",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Blocked",
-      "jiraStatus": "Blocked",
-      "jiraSummary": "1. Billing - Discount Linking and Available Credit linking batches use different queue fields which introduces race condition",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29499",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Blocked"
     },
     {
       "caseId": "",
@@ -80,14 +43,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30022",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "View Sendgrid email activity and logs",
-      "jiraAssignee": "Hong Yan",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30022",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -101,14 +57,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29977",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Front Desk, Facility Manager, Program Manager-to see an accurate Booking Summary with a clear price breakdown",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29977",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -122,14 +71,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29864",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "Achieve WCAG 2.1 Level AA accessibility compliance (scaling)",
-      "jiraAssignee": "John Rogers",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29864",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -143,14 +85,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30066",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "New_Membership and Cancel_Memberships weblinks are non-functional on Contact records",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30066",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -164,14 +99,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30068",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Fresh - Our Activities - Manage Booked Tiles Button",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30068",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -185,14 +113,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30067",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Fresh - Our Activities - Calendar Drag",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30067",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -206,14 +127,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29134",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Up Next",
-      "jiraStatus": "Up Next",
-      "jiraSummary": "(P2) Front Desk, Admin-to ensure Traction Rec components (from TREX1 and all other Traction Rec packages) designed to be placed on a Contact Lightning Record Page works when person account is enabled",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29134",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Up Next"
     },
     {
       "caseId": "",
@@ -227,14 +141,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30065",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "Fresh - Our Activities - Calendar View",
-      "jiraAssignee": "Han Mehrpour",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30065",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -248,14 +155,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30061",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Ready For Build",
-      "jiraStatus": "Ready For Build",
-      "jiraSummary": "Verify Gap: price sync fails if one of the add-ons purchase fails from SF response",
-      "jiraAssignee": "Liana Kan",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30061",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Ready For Build"
     },
     {
       "caseId": "",
@@ -269,14 +169,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30063",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "In preview, cart sync is slow (200s+) for orders containing multiple enrollments with add-ons",
-      "jiraAssignee": "Liana Kan",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30063",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -290,14 +183,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30021",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Fresh - Our Activities - Favourites Tiles",
-      "jiraAssignee": "Han Mehrpour",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30021",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -311,14 +197,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30020",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Fresh - Our Activities - Favourites Section",
-      "jiraAssignee": "Han Mehrpour",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30020",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -332,14 +211,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30018",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Fresh - Our Activities - Booked Tiles",
-      "jiraAssignee": "Han Mehrpour",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30018",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -353,14 +225,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29980",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Front Desk, Facility Manager, Program Manager-to modify individual bookings within an existing rental contract",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29980",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -374,14 +239,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-28916",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Merged",
-      "jiraStatus": "Merged",
-      "jiraSummary": "BSGs deleted by Amendment Discard - Issues in V60",
-      "jiraAssignee": "Kseniia Khodus",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28916",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Merged"
     },
     {
       "caseId": "",
@@ -395,14 +253,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30064",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "security checklist",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30064",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -416,14 +267,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29250",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Merged",
-      "jiraStatus": "Merged",
-      "jiraSummary": "5. Stored Account Manager allows users to select a Staged TP2 Stored Account as the replacement stored account for future/one-time billing schedules",
-      "jiraAssignee": "Yegor Smertenko",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29250",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Merged"
     },
     {
       "caseId": "",
@@ -437,14 +281,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29430",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Merged",
-      "jiraStatus": "Merged",
-      "jiraSummary": "4. Billing - ChargePostReconcileBatch Throws Duplicate Apex Job Error Resulting In Billing Batch Completing With Partially Completed Status",
-      "jiraAssignee": "Yegor Smertenko",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29430",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Merged"
     },
     {
       "caseId": "",
@@ -458,14 +295,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29938",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "Facility Manager, Admin-to manually sync existing booking data from Salesforce to Fresh",
-      "jiraAssignee": "Drew Leung",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Critical",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29938",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -479,14 +309,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-25688",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Error when closing PIP transaction which includes more than one membership for first time buyer",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-25688",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -500,14 +323,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29799",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "feature flag to hide welcome hub",
-      "jiraAssignee": "Han Mehrpour",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29799",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -521,14 +337,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29854",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Blocked",
-      "jiraStatus": "Blocked",
-      "jiraSummary": "Define rules and eligibility checking architecture (feature gap)",
-      "jiraAssignee": "Liana Kan",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29854",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Blocked"
     },
     {
       "caseId": "",
@@ -542,14 +351,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29570",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Blocked",
-      "jiraStatus": "Blocked",
-      "jiraSummary": "lock down salesforce permissions (security)",
-      "jiraAssignee": "John Rogers",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29570",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Blocked"
     },
     {
       "caseId": "",
@@ -563,14 +365,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29848",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Implement distributed tracing across services",
-      "jiraAssignee": "Liana Kan",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29848",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -584,14 +379,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29808",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "Chat Mockup",
-      "jiraAssignee": "Daniel Labonte",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29808",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -605,14 +393,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30030",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Activity Detail Option Card Refinement",
-      "jiraAssignee": "Daniel Labonte",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30030",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -626,14 +407,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30029",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "remove custom question forms from cart page",
-      "jiraAssignee": "Liana Kan",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30029",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -647,14 +421,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30038",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "ICP + ramp plan",
-      "jiraAssignee": "John Rogers",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30038",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -668,14 +435,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29833",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Implement AI fallback provider and usage caps",
-      "jiraAssignee": "John Rogers",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29833",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -689,14 +449,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29394",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "VF Pages, WebLinks & Flows",
-      "jiraAssignee": "Matteo Morrone",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29394",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -710,14 +463,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29210",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Ready For Build",
-      "jiraStatus": "Ready For Build",
-      "jiraSummary": "Ability to Bill in Advance- Configuration of New Fields in Planned Billing Schedule object",
-      "jiraAssignee": "Mai Duong",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29210",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Ready For Build"
     },
     {
       "caseId": "",
@@ -731,14 +477,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-27854",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Ready For Build",
-      "jiraStatus": "Ready For Build",
-      "jiraSummary": "Automated Billing - The pagination for the list of Scheduled Billing Batches is not updated correctly when removing a bunch of items",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-27854",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Ready For Build"
     },
     {
       "caseId": "",
@@ -752,14 +491,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29509",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Up Next",
-      "jiraStatus": "Up Next",
-      "jiraSummary": "Payment / Expiry race can leave approved TP2 transaction without a linked Rec transaction",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29509",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Up Next"
     },
     {
       "caseId": "",
@@ -773,14 +505,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30062",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Agentforce - [Spike] Evaluate the possibility of updating payment methods directly in the chat",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30062",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -794,14 +519,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30060",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Do not create users for salesforce contacts under age of 18",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30060",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -815,14 +533,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30059",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Metadata diff report labels custom metadata type permissions as Custom Permission",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30059",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -836,14 +547,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29973",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "LOB Limit during BatchFinalizeBatch",
-      "jiraAssignee": "Stanislav Zarud",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29973",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -857,14 +561,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30058",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Ability to adhoc-upload documents",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30058",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -878,14 +575,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30057",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Doc upload demo ",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30057",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -899,14 +589,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30056",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Salesforce Bi-Directional Sync (periodic)",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30056",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -920,14 +603,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29810",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "SF account hydration permission model when a user logs in / household syncs.",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29810",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -941,14 +617,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29797",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Salesforce pull existing registrations on account creation",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29797",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -962,14 +631,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30055",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "search suggestions outside of household",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30055",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -983,14 +645,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30050",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "IN REVIEW: Fix flaky test: resetButtonClearsAllFields()",
-      "jiraAssignee": "Krystsina Kimajeva",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30050",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -1004,14 +659,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30031",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "IN REVIEW: Re-enable weekly membership cancellation tests",
-      "jiraAssignee": "Krystsina Kimajeva",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30031",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -1025,14 +673,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30001",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "IN REVIEW: Add safety net for when org loads in classic mode in Jenkins",
-      "jiraAssignee": "Krystsina Kimajeva",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30001",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -1046,14 +687,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-28995",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Shipped",
-      "jiraStatus": "Shipped",
-      "jiraSummary": "Global Adjustment - Component not loading at all",
-      "jiraAssignee": "David Mao",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28995",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Shipped"
     },
     {
       "caseId": "",
@@ -1067,14 +701,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29228",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Shipped",
-      "jiraStatus": "Shipped",
-      "jiraSummary": "SG Flows changed to Draft status not updated in locked package when active version already exists",
-      "jiraAssignee": "Drew Leung",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Critical",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29228",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Shipped"
     },
     {
       "caseId": "",
@@ -1088,14 +715,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29551",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Ready For Build",
-      "jiraStatus": "Ready For Build",
-      "jiraSummary": "Front Desk Agent - Account Charges Explanation",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29551",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Ready For Build"
     },
     {
       "caseId": "",
@@ -1109,14 +729,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-22670",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Apex CPU Time Limit Exceeded occurs when the EditFeesController.post is run with many BS & TLIs",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-22670",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -1130,14 +743,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29169",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "NPC - Non-Profit Cloud",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29169",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -1151,14 +757,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-28351",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Unfreezing respects product credit policy while freezing does not",
-      "jiraAssignee": "Han Mehrpour",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28351",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -1172,14 +771,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-28198",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Review",
-      "jiraStatus": "In Review",
-      "jiraSummary": "Improve the Report - Automated Billing Transactions Processed Report to update \"Tender Record Type\" to \"Tender Name\"",
-      "jiraAssignee": "Yegor Smertenko",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28198",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Review"
     },
     {
       "caseId": "",
@@ -1193,14 +785,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-28044",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Sandbox Safe Refresh - Traction Pay 2 Configuration Processor Profiles should always have Is Production = false",
-      "jiraAssignee": "Jordan Lin",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28044",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -1214,14 +799,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-28775",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Review",
-      "jiraStatus": "In Review",
-      "jiraSummary": "(P1) Automatically rename accounts based on specific settings",
-      "jiraAssignee": "Shane O'Neill",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28775",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Review"
     },
     {
       "caseId": "",
@@ -1235,14 +813,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-28773",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Review",
-      "jiraStatus": "In Review",
-      "jiraSummary": "(P1) Rename account when contact information is changed",
-      "jiraAssignee": "Shane O'Neill",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28773",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Review"
     },
     {
       "caseId": "",
@@ -1256,14 +827,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-28771",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Merged",
-      "jiraStatus": "Merged",
-      "jiraSummary": "(P1) Create an account when a contact is created without an account",
-      "jiraAssignee": "Shane O'Neill",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28771",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Merged"
     },
     {
       "caseId": "",
@@ -1277,14 +841,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-28985",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "(P2) Enable NPC full support (Person Accounts + Account Contact Relationships ACR) ",
-      "jiraAssignee": "Angie Sun",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-28985",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -1298,14 +855,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29392",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "Custom Questions",
-      "jiraAssignee": "Marina Lin",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29392",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -1319,14 +869,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29316",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Up Next",
-      "jiraStatus": "Up Next",
-      "jiraSummary": "Archiving JEs: TLI does not have Deferred Revenue properly recognized when withdrawing from a program before the start date.",
-      "jiraAssignee": "Drew Leung",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Critical",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29316",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Up Next"
     },
     {
       "caseId": "",
@@ -1340,14 +883,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30045",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Add Jira Ticket column to Custom Metadata Types & Custom Settings",
-      "jiraAssignee": "Weiyoung Tan",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30045",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -1361,14 +897,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29327",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "Agentforce - Support \"Any/All Locations\" Option",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29327",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -1382,14 +911,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29146",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Shipped",
-      "jiraStatus": "Shipped",
-      "jiraSummary": "Implement Whitelist for Sandbox Emails to Prevent SG Emails from being sent to real contact emails",
-      "jiraAssignee": "Weiyoung Tan",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Critical",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29146",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Shipped"
     },
     {
       "caseId": "",
@@ -1403,14 +925,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30042",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Data Model Section - show readable name for Object Name (Label)",
-      "jiraAssignee": "Weiyoung Tan",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30042",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -1424,14 +939,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29494",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Add item to Related List on Location's page layout",
-      "jiraAssignee": "Jen Walsh",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29494",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -1445,14 +953,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29493",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Create new tabs for Location Category and Location Category Tag",
-      "jiraAssignee": "Jen Walsh",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29493",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -1466,14 +967,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29324",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Merged",
-      "jiraStatus": "Merged",
-      "jiraSummary": "Agentforce - Group Locations",
-      "jiraAssignee": "Linh Tran",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29324",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Merged"
     },
     {
       "caseId": "",
@@ -1487,14 +981,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30053",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Ready For Build",
-      "jiraStatus": "Ready For Build",
-      "jiraSummary": "Change Daily Price to Total Price filter in explore",
-      "jiraAssignee": "Liana Kan",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30053",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Ready For Build"
     },
     {
       "caseId": "",
@@ -1508,14 +995,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30054",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Chat Should Not Assume Users Location",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30054",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -1529,14 +1009,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29937",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Closed",
-      "jiraStatus": "Closed",
-      "jiraSummary": "Facility Manager, Admin-to manually migrate facility and event data from Salesforce to Fresh",
-      "jiraAssignee": "Drew Leung",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Critical",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29937",
-      "alignment": "mismatch"
+      "sfJiraTicketStatus": "Closed"
     },
     {
       "caseId": "",
@@ -1550,14 +1023,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30040",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "[AUTOMATED] Rename Billing Cancellation Credit Setting picklist value label from 'No Credit' to 'No Credit for Active Period' on TREX1__Product__c object",
-      "jiraAssignee": "Vanessa West",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30040",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "In Progress"
     },
     {
       "caseId": "",
@@ -1571,14 +1037,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-29944",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Front Desk, Facility Manager, Program Manager-to filter and view existing bookings and busy time slots in the week view calendar on desktop",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29944",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     },
     {
       "caseId": "",
@@ -1592,14 +1051,7 @@
       "closedDate": null,
       "jiraKey": "TOD029-30043",
       "linkSource": "jira_bootstrap",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Permission Section - diff shows value in \"New Value\" for deleted permissions",
-      "jiraAssignee": "Weiyoung Tan",
-      "jiraUpdated": "2026-06-26",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30043",
-      "alignment": "aligned_open"
+      "sfJiraTicketStatus": "Open"
     }
   ]
 }
