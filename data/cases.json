@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-01T14:44:53.273953+00:00",
+  "last_updated": "2026-07-01T17:11:24.696591+00:00",
   "data_source": {
     "snapshot_date": "2026-06-29T19:16:43.496205+00:00",
     "source": "jira_bootstrap",
@@ -16,6 +16,27 @@
     "linked_pct": 100
   },
   "cases": [
+    {
+      "subject": "4. Billing - ChargePostReconcileBatch Throws Duplicate Apex Job Error Resulting In Billing Batch Completing With Partially Completed Status",
+      "type": "Bug",
+      "caseStatus": "Open",
+      "isClosed": true,
+      "createdDate": "2026-05-11",
+      "closedDate": null,
+      "jiraKey": "TOD029-29430",
+      "sfJiraTicketStatus": "Closed",
+      "jiraStatus": "Closed",
+      "jiraSummary": "4. Billing - ChargePostReconcileBatch Throws Duplicate Apex Job Error Resulting In Billing Batch Completing With Partially Completed Status",
+      "jiraAssignee": "David Mao",
+      "jiraUpdated": "2026-07-01",
+      "jiraPriority": "Minor",
+      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29430",
+      "caseId": "",
+      "caseNumber": "",
+      "client": "\u2014",
+      "linkSource": "unlinked",
+      "alignment": "aligned_closed"
+    },
     {
       "subject": "1. Billing - Discount Linking and Available Credit linking batches use different queue fields which introduces race condition",
       "type": "Bug",
@@ -2320,27 +2341,6 @@
       "jiraUpdated": "2026-06-29",
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29250",
-      "caseId": "",
-      "caseNumber": "",
-      "client": "\u2014",
-      "linkSource": "unlinked",
-      "alignment": "aligned_open"
-    },
-    {
-      "subject": "4. Billing - ChargePostReconcileBatch Throws Duplicate Apex Job Error Resulting In Billing Batch Completing With Partially Completed Status",
-      "type": "Bug",
-      "caseStatus": "Open",
-      "isClosed": false,
-      "createdDate": "2026-05-11",
-      "closedDate": null,
-      "jiraKey": "TOD029-29430",
-      "sfJiraTicketStatus": "Merged",
-      "jiraStatus": "Merged",
-      "jiraSummary": "4. Billing - ChargePostReconcileBatch Throws Duplicate Apex Job Error Resulting In Billing Batch Completing With Partially Completed Status",
-      "jiraAssignee": "Yegor Smertenko",
-      "jiraUpdated": "2026-06-29",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29430",
       "caseId": "",
       "caseNumber": "",
       "client": "\u2014",
