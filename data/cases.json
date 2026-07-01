@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-01T11:58:04.520023+00:00",
+  "last_updated": "2026-07-01T14:44:53.273953+00:00",
   "data_source": {
     "snapshot_date": "2026-06-29T19:16:43.496205+00:00",
     "source": "jira_bootstrap",
@@ -16,6 +16,27 @@
     "linked_pct": 100
   },
   "cases": [
+    {
+      "subject": "1. Billing - Discount Linking and Available Credit linking batches use different queue fields which introduces race condition",
+      "type": "Bug",
+      "caseStatus": "Open",
+      "isClosed": false,
+      "createdDate": "2026-06-03",
+      "closedDate": null,
+      "jiraKey": "TOD029-29499",
+      "sfJiraTicketStatus": "Up Next",
+      "jiraStatus": "Up Next",
+      "jiraSummary": "1. Billing - Discount Linking and Available Credit linking batches use different queue fields which introduces race condition",
+      "jiraAssignee": "Jordan Lin",
+      "jiraUpdated": "2026-07-01",
+      "jiraPriority": "Major",
+      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29499",
+      "caseId": "",
+      "caseNumber": "",
+      "client": "\u2014",
+      "linkSource": "unlinked",
+      "alignment": "aligned_open"
+    },
     {
       "subject": "Agentforce - Support \"Any/All Locations\" Option",
       "type": "User Story",
@@ -535,27 +556,6 @@
       "jiraUpdated": "2026-06-30",
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29501",
-      "caseId": "",
-      "caseNumber": "",
-      "client": "\u2014",
-      "linkSource": "unlinked",
-      "alignment": "aligned_open"
-    },
-    {
-      "subject": "1. Billing - Discount Linking and Available Credit linking batches use different queue fields which introduces race condition",
-      "type": "Bug",
-      "caseStatus": "Open",
-      "isClosed": false,
-      "createdDate": "2026-06-03",
-      "closedDate": null,
-      "jiraKey": "TOD029-29499",
-      "sfJiraTicketStatus": "Up Next",
-      "jiraStatus": "Up Next",
-      "jiraSummary": "1. Billing - Discount Linking and Available Credit linking batches use different queue fields which introduces race condition",
-      "jiraAssignee": "Jordan Lin",
-      "jiraUpdated": "2026-06-30",
-      "jiraPriority": "Major",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29499",
       "caseId": "",
       "caseNumber": "",
       "client": "\u2014",
