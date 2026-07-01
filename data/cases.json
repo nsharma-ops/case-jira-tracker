@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-01T17:11:24.696591+00:00",
+  "last_updated": "2026-07-01T19:48:37.604323+00:00",
   "data_source": {
     "snapshot_date": "2026-06-29T19:16:43.496205+00:00",
     "source": "jira_bootstrap",
@@ -16,6 +16,27 @@
     "linked_pct": 100
   },
   "cases": [
+    {
+      "subject": "$ Discounts Failing to Inherit PBS Proration from Course Option ",
+      "type": "Bug",
+      "caseStatus": "Open",
+      "isClosed": false,
+      "createdDate": "2026-04-23",
+      "closedDate": null,
+      "jiraKey": "TOD029-29325",
+      "sfJiraTicketStatus": "In Progress",
+      "jiraStatus": "In Progress",
+      "jiraSummary": "$ Discounts Failing to Inherit PBS Proration from Course Option ",
+      "jiraAssignee": "Jordan Lin",
+      "jiraUpdated": "2026-07-01",
+      "jiraPriority": "Critical",
+      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29325",
+      "caseId": "",
+      "caseNumber": "",
+      "client": "\u2014",
+      "linkSource": "unlinked",
+      "alignment": "aligned_open"
+    },
     {
       "subject": "4. Billing - ChargePostReconcileBatch Throws Duplicate Apex Job Error Resulting In Billing Batch Completing With Partially Completed Status",
       "type": "Bug",
@@ -4630,27 +4651,6 @@
       "jiraUpdated": "2026-06-24",
       "jiraPriority": "Minor",
       "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-30024",
-      "caseId": "",
-      "caseNumber": "",
-      "client": "\u2014",
-      "linkSource": "unlinked",
-      "alignment": "aligned_open"
-    },
-    {
-      "subject": "$ Discounts Failing to Inherit PBS Proration from Course Option ",
-      "type": "Bug",
-      "caseStatus": "Open",
-      "isClosed": false,
-      "createdDate": "2026-04-23",
-      "closedDate": null,
-      "jiraKey": "TOD029-29325",
-      "sfJiraTicketStatus": "In Progress",
-      "jiraStatus": "In Progress",
-      "jiraSummary": "$ Discounts Failing to Inherit PBS Proration from Course Option ",
-      "jiraAssignee": "Jordan Lin",
-      "jiraUpdated": "2026-06-24",
-      "jiraPriority": "Critical",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-29325",
       "caseId": "",
       "caseNumber": "",
       "client": "\u2014",
