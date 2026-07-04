@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-04T20:52:37.284990+00:00",
+  "last_updated": "2026-07-04T21:55:36.299400+00:00",
   "data_source": {
     "snapshot_date": "2026-06-29T19:16:43.496205+00:00",
     "source": "jira_bootstrap",
@@ -16,6 +16,27 @@
     "linked_pct": 100
   },
   "cases": [
+    {
+      "subject": "Stop creating Journal Entries and Accounting Events for $0 transactions",
+      "type": "Bug",
+      "caseStatus": "Open",
+      "isClosed": false,
+      "createdDate": "2024-09-25",
+      "closedDate": null,
+      "jiraKey": "TOD029-24984",
+      "sfJiraTicketStatus": "Open",
+      "jiraStatus": "Open",
+      "jiraSummary": "Stop creating Journal Entries and Accounting Events for $0 transactions",
+      "jiraAssignee": "",
+      "jiraUpdated": "2026-07-04",
+      "jiraPriority": "Minor",
+      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-24984",
+      "caseId": "",
+      "caseNumber": "",
+      "client": "\u2014",
+      "linkSource": "unlinked",
+      "alignment": "aligned_open"
+    },
     {
       "subject": "4. Billing - ChargePostReconcileBatch Throws Duplicate Apex Job Error Resulting In Billing Batch Completing With Partially Completed Status",
       "type": "Bug",
@@ -1190,27 +1211,6 @@
       "caseNumber": "00028457",
       "client": "YMCA of Metropolitan Chicago",
       "linkSource": "jira_cases_field",
-      "alignment": "aligned_open"
-    },
-    {
-      "subject": "Stop creating Journal Entries and Accounting Events for $0 transactions",
-      "type": "Bug",
-      "caseStatus": "Open",
-      "isClosed": false,
-      "createdDate": "2024-09-25",
-      "closedDate": null,
-      "jiraKey": "TOD029-24984",
-      "sfJiraTicketStatus": "Open",
-      "jiraStatus": "Open",
-      "jiraSummary": "Stop creating Journal Entries and Accounting Events for $0 transactions",
-      "jiraAssignee": "",
-      "jiraUpdated": "2026-07-02",
-      "jiraPriority": "Minor",
-      "jiraUrl": "https://tractionrec.atlassian.net/browse/TOD029-24984",
-      "caseId": "",
-      "caseNumber": "",
-      "client": "\u2014",
-      "linkSource": "unlinked",
       "alignment": "aligned_open"
     },
     {
